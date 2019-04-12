@@ -1,33 +1,91 @@
-.App {
-  text-align: center;
+* {
+  padding: 0;
+  margin: 0;
+  font-family: 'Dokdo', cursive;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
+body {
+  background-color: black;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+#title {
+  font-size: 150px;
+  position: absolute;
   color: white;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  animation: title_anim 1s 1;
 }
 
-.App-link {
-  color: #61dafb;
+#tic {
+  animation: pop_tic_anim 0.50s 1;
+  animation-delay: 1s;
+  animation-fill-mode: forwards;
 }
 
-@keyframes App-logo-spin {
+#tac {
+  animation: pop_tac_anim 0.50s 1;
+  animation-delay: 1.5s;
+  animation-fill-mode: forwards;
+}
+
+#toe {
+  animation: pop_toe_anim 0.50s 1;
+  animation-delay: 2s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes title_anim {
   from {
-    transform: rotate(0deg);
+    top: 50%;
   }
   to {
-    transform: rotate(360deg);
+    top: 20%;
+  }
+}
+
+@keyframes pop_tic_anim {
+  25% {
+    font-size: 150px;
+  }
+  50% {
+    font-size: 200px;
+    color: blue;
+  }
+  100% {
+    font-size: 150px;
+    text-shadow: 1px 1px 1px white;
+    color:blue;
+  }
+}
+
+@keyframes pop_tac_anim {
+  25% {
+    font-size: 150px;
+  }
+  50% {
+    font-size: 200px;
+    color: gray;
+  }
+  100% {
+    font-size: 150px;
+    color: gray;
+    text-shadow: 1px 1px 1px white;
+  }
+}
+
+@keyframes pop_toe_anim {
+  25% {
+    font-size: 150px;
+  }
+  50% {
+    font-size: 200px;
+    color: red;
+  }
+  100% {
+    font-size: 150px;
+    text-shadow: 1px 1px 1px white;
+    color:red;
   }
 }
