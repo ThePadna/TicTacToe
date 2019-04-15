@@ -3,9 +3,20 @@
   margin: 0;
   font-family: 'Dokdo', cursive;
 }
-
 body {
   background-color: black;
+}
+
+#options {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#options p {
+  color: white;
+  font-size: 100px;
 }
 
 #title {
