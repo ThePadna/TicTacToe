@@ -1,18 +1,30 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import ReactDOM from 'react-dom';
-import Options from './Options';
 
 class App extends Component {
   render() {
     return (
-      <div id="home">
+      <div id="wrapper">
         <div id="header">
-          <p id="title"><span id="tic">Tic</span><span id="tac">Tac</span><span id="toe">Toe</span></p>
+          <p>TicTacToe</p>
         </div>
-        <div id="options">
-        <Options></Options>
+        <div id="options" style={{width:'800px', margin:'0 auto'}}>
+          <div id="gridsize">
+            <h1>Grid Size</h1>
+            <select>
+              <option>3x3</option>
+              <option>5x5</option>
+              <option>7x7</option>
+           </select>
+          </div>
+          <div id="ai">
+            <h1>AI</h1>
+            <select>
+              <option>Enabled</option>
+              <option>Disabled</option>
+            </select>
+          </div>
+          <button id="startbtn">Start</button>
         </div>
       </div>
     );

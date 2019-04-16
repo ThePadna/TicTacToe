@@ -1,102 +1,27 @@
 * {
   padding: 0;
   margin: 0;
-  font-family: 'Dokdo', cursive;
 }
 body {
   background-color: black;
 }
 
+#header {
+  color: white;
+  font-family: 'Dokdo', cursive;
+  font-size: 200px;
+  text-align: center;
+  text-shadow: 4px 4px gray;
+}
+
 #options {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-#options p {
   color: white;
-  font-size: 100px;
+  font-size: 10px;
+  text-shadow: 2px 2px gray;
 }
 
-#title {
-  font-size: 150px;
-  position: absolute;
-  color: white;
-  top: 20%;
-  left: 50%;
-  transform: translate(-50%,-50%);
-  animation: title_anim 1s 1;
-}
-
-#tic {
-  animation: pop_tic_anim 0.50s 1;
-  animation-delay: 1s;
-  animation-fill-mode: forwards;
-}
-
-#tac {
-  animation: pop_tac_anim 0.50s 1;
-  animation-delay: 1.5s;
-  animation-fill-mode: forwards;
-}
-
-#toe {
-  animation: pop_toe_anim 0.50s 1;
-  animation-delay: 2s;
-  animation-fill-mode: forwards;
-}
-
-@keyframes title_anim {
-  from {
-    top: 50%;
-  }
-  to {
-    top: 20%;
-  }
-}
-
-@keyframes pop_tic_anim {
-  25% {
-    font-size: 150px;
-  }
-  50% {
-    font-size: 200px;
-    color: blue;
-  }
-  100% {
-    font-size: 150px;
-    text-shadow: 1px 1px 1px white;
-    color:blue;
-  }
-}
-
-@keyframes pop_tac_anim {
-  25% {
-    font-size: 150px;
-  }
-  50% {
-    font-size: 200px;
-    color: gray;
-  }
-  100% {
-    font-size: 150px;
-    color: gray;
-    text-shadow: 1px 1px 1px white;
-  }
-}
-
-@keyframes pop_toe_anim {
-  25% {
-    font-size: 150px;
-  }
-  50% {
-    font-size: 200px;
-    color: red;
-  }
-  100% {
-    font-size: 150px;
-    text-shadow: 1px 1px 1px white;
-    color:red;
-  }
+#startbtn {
+  margin-top: 10px;
+  width: 70px;
+  height: 30px;
 }
