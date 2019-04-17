@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Game from './Game';
 
 class Settings extends Component {
     constructor() {
@@ -35,6 +36,8 @@ class Settings extends Component {
 
     hideToggle() {
         this.setState({hide:!this.state.hide});
+        let game = new Game();
+        game.draw(1, false);
     }
 }
 
