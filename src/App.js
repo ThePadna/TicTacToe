@@ -11,7 +11,7 @@ class App extends Component {
           <p>TicTacToe</p>
         </div>
         <Settings></Settings>
-        <canvas id="gamecanvas" style={{width:'500',height:'500'}}></canvas>
+        <canvas id="gamecanvas"></canvas>
       </div>
     );
   }
