@@ -38,7 +38,6 @@ class Settings extends Component {
         this.setState({hide:!this.state.hide});
         let game = new Game();
         game.draw(1, false);
-        game.animate();
     }
 }
 
