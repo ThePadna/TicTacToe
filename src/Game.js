@@ -1,12 +1,12 @@
-class Game {
-    ai = false;
-    constuctor(ai) { //isnt getting called
-        console.log(ai);
+import React, { Component } from 'react';
+
+class Game{
+
+    constructor(ai) {
         this.ai = ai;
     }
 
     draw(size) {
-        console.log("ai?? " + this.ai);
         let canv = document.getElementById("gamecanvas");
         let MIN_WIDTH = 0, MIN_HEIGHT = 0, MAX_WIDTH = canv.width, MAX_HEIGHT = canv.height;
         let ctx = document.querySelector("#gamecanvas").getContext("2d");
