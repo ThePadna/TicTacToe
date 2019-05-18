@@ -36,9 +36,11 @@ class Settings extends Component {
 
     hideToggle() {
         this.setState({hide:!this.state.hide});
-        let selectBox = document.getElementById("gridsize").getElementsByTagName("select")[0];
-        let size = selectBox.options[selectBox.selectedIndex].value;
-        let game = new Game();
+        let selectBoxGrid = document.getElementById("gridsize").getElementsByTagName("select")[0];
+        let size = selectBoxGrid.options[selectBoxGrid.selectedIndex].value;
+        let selectBoxAI = document.getElementById("ai").getElementsByTagName("select")[0];
+        let ai = selectBoxAI.options[selectBoxAI.selectedIndex].value.startsWith("E") ? true : false;
+        let game = new Game(ai);
         game.draw(size.charAt(0));
     }
 }
