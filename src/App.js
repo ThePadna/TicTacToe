@@ -4,19 +4,78 @@ import Settings from './Settings';
 import Game from './Game';
 
 class App extends Component {
-  render() {
-    return (
-      <div id="wrapper">
-        <div id="header">
-          <p>TicTacToe</p>
-        </div>
-        <Settings></Settings>
-        <div id="canvas-wrapper">
-          <canvas id="gamecanvas"></canvas>
-        </div>
-      </div>
-    );
+
+  constructor(props) {
+    super(props);
+    this.gameInstance = null;
+    this.state = { inProgress: false }
+    this.hideToggle = this.hideToggle.bind(this);
+    this.gridSize = 3;
+    this.AI = false;
   }
+
+  render() {
+    if (this.state.inProgress) {
+      let selectBoxGrid = document.getElementById("gridsize").getElementsByTagName("select")[0];
+      let size = selectBoxGrid.options[selectBoxGrid.selectedIndex].value;
+      let selectBoxAI = document.getElementById("ai").getElementsByTagName("select")[0];
+      let ai = selectBoxAI.options[selectBoxAI.selectedIndex].value.startsWith("E") ? true : false;
+      this.size = size;
+      this.ai = ai;
+      return (
+        <div id="wrapper">
+          <div id="header">
+            <p>TicTacToe</p>
+          </div>
+          <div id="canvas-wrapper">
+            <canvas id="gamecanvas"></canvas>
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div id="wrapper">
+          <div id="header">
+            <p>TicTacToe</p>
+          </div>
+          <div id="options" style={{ width: '800px', margin: '0 auto' }}>
+            <div id="gridsize">
+              <h1>Grid Size</h1>
+              <select>
+                <option>3x3</option>
+                <option>5x5</option>
+                <option>7x7</option>
+              </select>
+            </div>
+            <div id="ai">
+              <h1>AI</h1>
+              <select>
+                <option>Enabled</option>
+                <option>Disabled</option>
+              </select>
+            </div>
+            <button id="startbtn" onClick={this.hideToggle}>Start</button>
+          </div>
+        </div>
+      );
+    }
+  }
+
+  componentDidUpdate() {
+    if(this.state.inProgress) {
+      this.gameInstance = new Game(this.AI, this.gridSize);
+      this.gameInstance.draw();
+    }
+  }
+
+  hideToggle() {
+    this.setState({ inProgress: true });
+  }
+
+  getGameInstance() {
+    return this.gameInstance;
+  }
+
 }
 
 export default App;
