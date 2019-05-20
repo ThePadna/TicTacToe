@@ -19,7 +19,7 @@ class App extends Component {
       let size = selectBoxGrid.options[selectBoxGrid.selectedIndex].value;
       let selectBoxAI = document.getElementById("ai").getElementsByTagName("select")[0];
       let ai = selectBoxAI.options[selectBoxAI.selectedIndex].value.startsWith("E") ? true : false;
-      this.size = size;
+      this.gridSize = parseInt(size.substr(0, 1));
       this.ai = ai;
       return (
         <div id="wrapper">
