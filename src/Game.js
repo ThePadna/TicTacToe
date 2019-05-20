@@ -1,5 +1,3 @@
-import React, { Component } from 'react';
-
 class Game {
 
     constructor(ai, gridSize) {
