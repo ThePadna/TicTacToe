@@ -7,6 +7,7 @@ class Game {
 
     draw() {
         let canv = document.getElementById("gamecanvas");
+        canv.addEventListener('click', (e) => { this.clicked(e.offsetX, e.offsetY); });
         let MIN_WIDTH = 0, MIN_HEIGHT = 0, MAX_WIDTH = canv.width, MAX_HEIGHT = canv.height;
         let ctx = document.querySelector("#gamecanvas").getContext("2d");
         ctx.fillStyle = 'white';
@@ -31,6 +32,10 @@ class Game {
     
     toRadians(deg) {
         return deg * (Math.PI / 180);
+    }
+
+    clicked(x, y) {
+        console.log("clicked at x " + x + " y " + y);
     }
 
 }
