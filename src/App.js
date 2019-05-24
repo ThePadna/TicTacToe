@@ -27,7 +27,7 @@ class App extends Component {
             <p>TicTacToe</p>
           </div>
           <div id="canvas-wrapper">
-            <canvas id="gamecanvas"></canvas>
+            <canvas id="gamecanvas" height="500px" width="500px"></canvas>
           </div>
         </div>
       );
