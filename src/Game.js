@@ -36,14 +36,15 @@ class Game {
                 pixelHor += (pixelJumpSizeHori);
                 firstRun = false;
             }
-            if((pixelVert + pixelJumpSizeVert) >= MAX_HEIGHT) {
+            if((pixelVert + pixelJumpSizeVert) > MAX_HEIGHT) {
                 pixelVert = 0;
                 pixelHor += (pixelJumpSizeHori);
             }
             let topLeftX = (pixelHor - pixelJumpSizeHori), topLeftY = pixelVert;
             pixelVert += pixelJumpSizeVert;
             let bottomRightX = pixelHor, bottomRightY = pixelVert;
-            console.log("box #" + i + " FROM x" + topLeftX + " y" + topLeftY + " TO " + " x" + bottomRightX + " y" + bottomRightY)
+            //console.log("box #" + i + " FROM x" + topLeftX + " y" + topLeftY + " TO " + " x" + bottomRightX + " y" + bottomRightY)
+            gameState[i] = new CanvasCoordinatesSelection(new CanvasCoordinates(topLeftX, topLeftY), new CanvasCoordinates(bottomRightX, bottomRightY)); 
         }
     }
 
