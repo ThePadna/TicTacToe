@@ -13,3 +13,5 @@ class CanvasCoordinates {
         return this.y;
     }
 }
+
+export default CanvasCoordinates;
