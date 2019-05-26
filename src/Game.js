@@ -1,6 +1,7 @@
 import CellState from './wrappers/CellState'
 import CanvasCoordinates from './wrappers/CanvasCoordinates'
 import CanvasCoordinatesSelection from './wrappers/CanvasCoordinatesSelection'
+import DrawCircleAnim from './tasks/DrawCircleAnim'
 
 class Game {
 
@@ -56,6 +57,8 @@ class Game {
             if(sel.contains(cc)) {
                 let coord1 = sel.getCoord1(), coord2 = sel.getCoord2();
                 let midX = ((coord1.getX() + coord2.getX()) / 2), midY = ((coord1.getY() + coord2.getY()) / 2);
+                ctx.lineWidth = (50 / this.size);
+                new DrawCircleAnim(ctx, new CanvasCoordinates(midX, midY), (jumpSize / 3), 0, Math.PI * 2, (Math.PI * 2) / 50).tick();
             }
         }
     }
