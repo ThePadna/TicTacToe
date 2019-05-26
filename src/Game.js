@@ -1,6 +1,6 @@
-import CellState from './CellState'
-import CanvasCoordinates from './CanvasCoordinates'
-import CanvasCoordinatesSelection from './CanvasCoordinatesSelection'
+import CellState from './wrappers/CellState'
+import CanvasCoordinates from './wrappers/CanvasCoordinates'
+import CanvasCoordinatesSelection from './wrappers/CanvasCoordinatesSelection'
 
 class Game {
 
