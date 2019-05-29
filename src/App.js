@@ -42,8 +42,8 @@ class App extends Component {
               <h1>Grid Size</h1>
               <select>
                 <option>3x3</option>
-                <option>5x5</option>
-                <option>7x7</option>
+                <option>6x6</option>
+                <option>9x9</option>
               </select>
             </div>
             <div id="ai">
