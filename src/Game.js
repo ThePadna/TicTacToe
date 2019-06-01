@@ -59,10 +59,29 @@ class Game {
                 let coord1 = sel.getCoord1(), coord2 = sel.getCoord2();
                 let midX = ((coord1.getX() + coord2.getX()) / 2), midY = ((coord1.getY() + coord2.getY()) / 2);
                 ctx.lineWidth = (50 / this.size);
+                if(this.ai) {
+                    setTimeout(this.aiTakeTurn(5), Math.random()*500);
+                }
                 //new DrawCrossAnim(ctx, new CanvasCoordinates(midX, midY), 1.5, (jumpSize / 3)).tick();
                 //new DrawCircleAnim(ctx, new CanvasCoordinates(midX, midY), (jumpSize / 3), 0, Math.PI * 2, (Math.PI * 2) / 50).tick();
             }
         }
+    }
+
+    // missPlay should be a value from 0-100 which acts as a percentage value of which the AI will missplay
+    // A missplay will go strictly for win condition and not try to play defense
+    aiTakeTurn(missPlay) {
+        let rdm = Math.random() * 100;
+        if(rdm <= missPlay) {
+            //win condition
+        } else {
+            //defense
+        }
+    }
+
+    setDisplayWhosTurn(info) {
+        info = "&nbsp;" + info + "&nbsp;";
+        document.getElementById("turn-info").getElementsByTagName("span")[0].innerHTML = info;
     }
 }
 

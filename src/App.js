@@ -29,6 +29,7 @@ class App extends Component {
           <div id="canvas-wrapper">
             <canvas id="gamecanvas" height="500px" width="500px"></canvas>
           </div>
+          <p id="turn-info"> It's<span>&nbsp;your&nbsp;</span>turn </p>
         </div>
       );
     } else {
