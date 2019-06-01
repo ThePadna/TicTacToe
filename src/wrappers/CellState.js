@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 
-class CellState extends React.Component {
+class CellState {
 
     constructor(sel) {
-        super();
         this.selection = sel;
-        this.state = {value:null}
+        this.value = null;
+        this.owner = null;
     }
 
     getSelection() {
@@ -13,32 +13,33 @@ class CellState extends React.Component {
     }
 
     getValue() {
-        return this.state.value;
+        return this.value;
     }
 
     setValue(val) {
         let err = "You can only set a CellState's value with either x, o, or null.";
         if(!val.includes("x") && !val.includes("o")) {
             console.log(err);
-            this.setState({value:null})
+            this.value = null;
         } else if(val.length > 1) {
             console.log(err);
-            this.setState({value:null});
+            this.value = null;
         } else {
-            this.setState({value:val});
+            this.value = val;
         }
     }
 
-    render() {
-        let value = this.state.value;
-        if(value == null) {
-            console.log("render")
-        } else if(value.localeCompare("o") == 0) {
-            console.log("render")
-        } else if(value.localeCompare("x") == 0) {
-            console.log("render")
+    setOwner(owner) {
+        let err = "You can only set a CellState's owner with either 0 or 1 (Player number).";
+        if(owner != 0 && owner != 1) {
+            console.log(err);
+            return;
         }
-        return "null;"
+        this.owner = owner;
+    }
+
+    getOwner() {
+        return this.owner;
     }
 }
 

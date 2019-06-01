@@ -10,17 +10,13 @@ class App extends Component {
     this.state = { inProgress: false }
     this.hideToggle = this.hideToggle.bind(this);
     this.gridSize = 3;
-    this.AI = false;
   }
 
   render() {
     if (this.state.inProgress) {
       let selectBoxGrid = document.getElementById("gridsize").getElementsByTagName("select")[0];
       let size = selectBoxGrid.options[selectBoxGrid.selectedIndex].value;
-      let selectBoxAI = document.getElementById("ai").getElementsByTagName("select")[0];
-      let ai = selectBoxAI.options[selectBoxAI.selectedIndex].value.startsWith("E") ? true : false;
       this.gridSize = parseInt(size.substr(0, 1));
-      this.ai = ai;
       return (
         <div id="wrapper">
           <div id="header">
@@ -47,13 +43,6 @@ class App extends Component {
                 <option>9x9</option>
               </select>
             </div>
-            <div id="ai">
-              <h1>AI</h1>
-              <select>
-                <option>Enabled</option>
-                <option>Disabled</option>
-              </select>
-            </div>
             <button id="startbtn" onClick={this.hideToggle}>Start</button>
           </div>
         </div>
@@ -63,7 +52,7 @@ class App extends Component {
 
   componentDidUpdate() {
     if(this.state.inProgress) {
-      this.gameInstance = new Game(this.AI, this.gridSize);
+      this.gameInstance = new Game(this.gridSize);
       this.gameInstance.draw();
     }
   }

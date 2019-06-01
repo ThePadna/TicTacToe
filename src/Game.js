@@ -6,11 +6,12 @@ import DrawCrossAnim from './tasks/DrawCrossAnim'
 
 class Game {
 
-    constructor(ai, gridSize) {
-        this.ai = ai;
+    constructor(gridSize) {
         this.size = gridSize;
         this.gameState = [gridSize * gridSize];
-        this.draw.bind(this);
+        this.turn = 0;
+        this.p1Symbol = (Math.random() * 2) < 1 ? "x" : "o";
+        this.aiTakeTurn = this.aiTakeTurn.bind(this);
     }
 
     draw() {
@@ -53,30 +54,42 @@ class Game {
     }
 
     clicked(cc, ctx, jumpSize) {
+        if(this.turn != 0) return;
         for(let i = 0; i < this.gameState.length; i++) {
             let sel = this.gameState[i].getSelection();
             if(sel.contains(cc)) {
                 let coord1 = sel.getCoord1(), coord2 = sel.getCoord2();
                 let midX = ((coord1.getX() + coord2.getX()) / 2), midY = ((coord1.getY() + coord2.getY()) / 2);
                 ctx.lineWidth = (50 / this.size);
-                if(this.ai) {
-                    setTimeout(this.aiTakeTurn(5), Math.random()*500);
+                if(this.p1Symbol == ("x")) {
+                    new DrawCrossAnim(ctx, new CanvasCoordinates(midX, midY), 1.5, (jumpSize / 3)).tick();
+                    this.gameState[i].setValue("x");
+                    this.gameState[i].setOwner(0);
+                } else if(this.p1Symbol == ("o")) {
+                    new DrawCircleAnim(ctx, new CanvasCoordinates(midX, midY), (jumpSize / 3), 0, Math.PI * 2, (Math.PI * 2) / 50).tick();
+                    this.gameState[i].setValue("o");
+                    this.gameState[i].setOwner(0);
                 }
-                //new DrawCrossAnim(ctx, new CanvasCoordinates(midX, midY), 1.5, (jumpSize / 3)).tick();
-                //new DrawCircleAnim(ctx, new CanvasCoordinates(midX, midY), (jumpSize / 3), 0, Math.PI * 2, (Math.PI * 2) / 50).tick();
+                this.turn = 1;
+                this.setDisplayWhosTurn("AI's")
+                setTimeout(this.aiTakeTurn, Math.random()*2000);
             }
         }
     }
 
     // missPlay should be a value from 0-100 which acts as a percentage value of which the AI will missplay
     // A missplay will go strictly for win condition and not try to play defense
-    aiTakeTurn(missPlay) {
+    aiTakeTurn() {
+        let missPlay = 10;
         let rdm = Math.random() * 100;
+        console.log("hey");
         if(rdm <= missPlay) {
             //win condition
         } else {
             //defense
         }
+        this.turn = 0;
+        this.setDisplayWhosTurn("your")
     }
 
     setDisplayWhosTurn(info) {
