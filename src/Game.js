@@ -49,7 +49,7 @@ class Game {
             let topLeftX = (pixelHor - pixelJumpSize), topLeftY = pixelVert;
             pixelVert += pixelJumpSize;
             let bottomRightX = pixelHor, bottomRightY = pixelVert;
-            this.gameState[i] = new CellState(new CanvasCoordinatesSelection(new CanvasCoordinates(topLeftX, topLeftY), new CanvasCoordinates(bottomRightX, bottomRightY)));
+            this.gameState[i] = new CellState(new CanvasCoordinatesSelection(new CanvasCoordinates(topLeftX, topLeftY), new CanvasCoordinates(bottomRightX, bottomRightY)), i);
         }
     }
 
@@ -64,15 +64,15 @@ class Game {
                 if(this.p1Symbol == ("x")) {
                     new DrawCrossAnim(ctx, new CanvasCoordinates(midX, midY), 1.5, (jumpSize / 3)).tick();
                     this.gameState[i].setValue("x");
-                    this.gameState[i].setOwner(0);
+                    this.gameState[i].setOwner(this.turn);
                 } else if(this.p1Symbol == ("o")) {
                     new DrawCircleAnim(ctx, new CanvasCoordinates(midX, midY), (jumpSize / 3), 0, Math.PI * 2, (Math.PI * 2) / 50).tick();
                     this.gameState[i].setValue("o");
-                    this.gameState[i].setOwner(0);
+                    this.gameState[i].setOwner(this.turn);
                 }
                 this.turn = 1;
                 this.setDisplayWhosTurn("AI's")
-                setTimeout(this.aiTakeTurn, Math.random()*2000);
+                setTimeout(this.aiTakeTurn, 1500);
             }
         }
     }
@@ -84,9 +84,17 @@ class Game {
         let rdm = Math.random() * 100;
         console.log("hey");
         if(rdm <= missPlay) {
-            //win condition
         } else {
-            //defense
+            let emptySpots = [];
+            for(let i = 0; i < this.gameState.length; i++) {
+                if(this.gameState[i].getOwner() === null) {
+                    emptySpots.push(this.gameState[i]);
+                }
+            }
+            console.log("empty spots:");
+            for(let i = 0; i < emptySpots.length; i++) {
+                console.log(emptySpots[i].getNum());
+            }
         }
         this.turn = 0;
         this.setDisplayWhosTurn("your")

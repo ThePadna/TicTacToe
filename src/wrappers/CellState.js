@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 
 class CellState {
 
-    constructor(sel) {
+    constructor(sel, num) {
         this.selection = sel;
         this.value = null;
         this.owner = null;
+        this.num = num;
     }
 
     getSelection() {
@@ -14,6 +15,10 @@ class CellState {
 
     getValue() {
         return this.value;
+    }
+
+    getNum() {
+        return this.num;
     }
 
     setValue(val) {
