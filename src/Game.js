@@ -85,9 +85,11 @@ class Game {
             }
         }
         if(!found) {
+            //first turn
             for(let i = 0; i < this.gameState.length; i++) {
-                if(this.gameState[i].getOwner === null) {
+                if(this.gameState[i].getOwner() === null) {
                     this.gameState[i].claim(this.turn, symbol, this.jumpSize);
+                    break;
                 }
             }
         }
