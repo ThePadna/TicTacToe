@@ -8,6 +8,7 @@ class Game {
 
     constructor(gridSize) {
         this.size = gridSize;
+        this.jumpSize = null;
         this.gameState = [gridSize * gridSize];
         this.turn = 0;
         this.p1Symbol = (Math.random() * 2) < 1 ? "x" : "o";
@@ -22,6 +23,7 @@ class Game {
         ctx.fillRect(MIN_WIDTH, MIN_HEIGHT, MAX_WIDTH, MAX_HEIGHT);
         ctx.fillStyle = 'black';
         let pixelJumpSize = (MAX_WIDTH / this.size), pixelCurVert = 0, pixelCurHori = 0;
+        this.jumpSize = pixelJumpSize;
         canv.addEventListener('click', (e) => { this.clicked(new CanvasCoordinates(e.offsetX, e.offsetY), ctx, pixelJumpSize); });
         for(let i = 0; i < this.size; i++) {
             pixelCurHori+=pixelJumpSize;
@@ -61,15 +63,7 @@ class Game {
                 let coord1 = sel.getCoord1(), coord2 = sel.getCoord2();
                 let midX = ((coord1.getX() + coord2.getX()) / 2), midY = ((coord1.getY() + coord2.getY()) / 2);
                 ctx.lineWidth = (50 / this.size);
-                if(this.p1Symbol == ("x")) {
-                    new DrawCrossAnim(ctx, new CanvasCoordinates(midX, midY), 1.5, (jumpSize / 3)).tick();
-                    this.gameState[i].setValue("x");
-                    this.gameState[i].setOwner(this.turn);
-                } else if(this.p1Symbol == ("o")) {
-                    new DrawCircleAnim(ctx, new CanvasCoordinates(midX, midY), (jumpSize / 3), 0, Math.PI * 2, (Math.PI * 2) / 50).tick();
-                    this.gameState[i].setValue("o");
-                    this.gameState[i].setOwner(this.turn);
-                }
+                this.gameState[i].claim(this.turn, this.p1Symbol, jumpSize);
                 this.turn = 1;
                 this.setDisplayWhosTurn("AI's")
                 setTimeout(this.aiTakeTurn, 1500);
@@ -80,24 +74,33 @@ class Game {
     // missPlay should be a value from 0-100 which acts as a percentage value of which the AI will missplay
     // A missplay will go strictly for win condition and not try to play defense
     aiTakeTurn() {
-        let missPlay = 10;
+        let missPlay = 10, symbol = this.p1Symbol === "x" ? "o" : "x";
         let rdm = Math.random() * 100;
-        console.log("hey");
-        if(rdm <= missPlay) {
-        } else {
-            let emptySpots = [];
+        let aiClaims = [];
+        let found = false;
+        for(let i = 0; i < this.gameState.length; i++) {
+            if(this.gameState[i].getOwner() === 1) {
+                aiClaims.push(this.gameState[i]);
+                found = true;
+            }
+        }
+        if(!found) {
             for(let i = 0; i < this.gameState.length; i++) {
-                if(this.gameState[i].getOwner() === null) {
-                    emptySpots.push(this.gameState[i]);
+                if(this.gameState[i].getOwner === null) {
+                    this.gameState[i].claim(this.turn, symbol, this.jumpSize);
                 }
             }
-            console.log("empty spots:");
-            for(let i = 0; i < emptySpots.length; i++) {
-                console.log(emptySpots[i].getNum());
-            }
+        }
+
+        let move = null;
+        if(rdm <= missPlay) {
+        } else {
         }
         this.turn = 0;
         this.setDisplayWhosTurn("your")
+    }
+    getRow(index) {
+        return (Math.floor(index / this.size));
     }
 
     setDisplayWhosTurn(info) {
