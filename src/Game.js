@@ -3,6 +3,7 @@ import CanvasCoordinates from './wrappers/CanvasCoordinates'
 import CanvasCoordinatesSelection from './wrappers/CanvasCoordinatesSelection'
 import DrawCircleAnim from './tasks/DrawCircleAnim'
 import DrawCrossAnim from './tasks/DrawCrossAnim'
+import { throws } from 'assert';
 
 class Game {
 
@@ -76,32 +77,41 @@ class Game {
     aiTakeTurn() {
         let missPlay = 10, symbol = this.p1Symbol === "x" ? "o" : "x";
         let rdm = Math.random() * 100;
-        let aiClaims = [];
+        let aiClaims = [], playerClaims = [];
         let found = false;
         for(let i = 0; i < this.gameState.length; i++) {
             if(this.gameState[i].getOwner() === 1) {
                 aiClaims.push(this.gameState[i]);
                 found = true;
+            } else if(this.gameState[i].getOwner() == 0) {
+                playerClaims.push(this.gameState[i]);
             }
         }
         if(!found) {
             //first turn
-            for(let i = 0; i < this.gameState.length; i++) {
-                if(this.gameState[i].getOwner() === null) {
-                    this.gameState[i].claim(this.turn, symbol, this.jumpSize);
-                    break;
+            if(playerClaims.length > 0) {
+                for(let i = 0; i < this.gameState.length; i++) {
+                    console.log(Math.floor((this.size*this.size) / 2));
+                    console.log("index" + this.gameState[i].getIndex());
+                    if(this.gameState[i].getIndex() == (Math.floor((this.size*this.size) / 2))) {
+                        if(this.gameState[i].getOwner() === null) {
+                            this.gameState[i].claim(this.turn, symbol, this.jumpSize);
+                        } else {
+                            let num = Math.random() * 2 < 1 ? 0 : this.gameState.length-1;
+                            this.gameState[num].claim(this.turn, symbol, this.jumpSize);
+                        }
+                    }
                 }
             }
-        }
-
-        let move = null;
-        if(rdm <= missPlay) {
         } else {
+            for(let i = 0; i < playerClaims.length; i++) {
+
+            }
         }
         this.turn = 0;
         this.setDisplayWhosTurn("your")
     }
-    getRow(index) {
+    getRows(index) {
         return (Math.floor(index / this.size));
     }
 
