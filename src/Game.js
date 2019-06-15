@@ -21,6 +21,7 @@ class Game {
         let canv = document.getElementById("gamecanvas");
         let MIN_WIDTH = 0, MIN_HEIGHT = 0, MAX_WIDTH = canv.width, MAX_HEIGHT = canv.height;
         let ctx = document.querySelector("#gamecanvas").getContext("2d");
+        ctx.lineWidth = (40 / this.size);
         ctx.fillStyle = 'white';
         ctx.fillRect(MIN_WIDTH, MIN_HEIGHT, MAX_WIDTH, MAX_HEIGHT);
         ctx.fillStyle = 'black';
@@ -62,15 +63,22 @@ class Game {
         for (let i = 0; i < this.gameState.length; i++) {
             let sel = this.gameState[i].getSelection();
             if (sel.contains(cc)) {
-                console.log("Index : " + this.gameState[i].getIndex());
-                console.log("Index next row : " + this.gameState[i].getIndex() * this.gameState[i].getIndex());
-                let coord1 = sel.getCoord1(), coord2 = sel.getCoord2();
-                let midX = ((coord1.getX() + coord2.getX()) / 2), midY = ((coord1.getY() + coord2.getY()) / 2);
-                ctx.lineWidth = (50 / this.size);
                 this.gameState[i].claim(this.turn, this.p1Symbol, jumpSize);
-                this.turn = 1;
-                this.setDisplayWhosTurn("AI's")
-                setTimeout(this.aiTakeTurn, 1500);
+                let aiClaims = [], playerClaims = [];
+                let found = false;
+                for (let i = 0; i < this.gameState.length; i++) {
+                    if (this.gameState[i].getOwner() === 1) {
+                        aiClaims.push(this.gameState[i]);
+                        found = true;
+                    } else if (this.gameState[i].getOwner() == 0) {
+                        playerClaims.push(this.gameState[i]);
+                    }
+                }
+                if (!this.checkForWinCondition(playerClaims, aiClaims)) {
+                    this.turn = 1;
+                    this.setDisplayWhosTurn("AI's")
+                    setTimeout(this.aiTakeTurn, 1500);
+                }
             }
         }
     }
@@ -90,17 +98,17 @@ class Game {
                 playerClaims.push(this.gameState[i]);
             }
         }
-        if (!found) {
-            //first turn
+        if (!found && this.size == 3) {
             if (playerClaims.length > 0) {
                 for (let i = 0; i < this.gameState.length; i++) {
-                    console.log(Math.floor((this.size * this.size) / 2));
                     if (this.gameState[i].getIndex() == (Math.floor((this.size * this.size) / 2))) {
                         if (this.gameState[i].getOwner() === null) {
-                            this.gameState[i].claim(this.turn, symbol, this.jumpSize);
+                            this.claimEndAITurn(this.gameState[i], symbol, playerClaims, aiClaims);
+                            return;
                         } else {
                             let num = Math.random() * 2 < 1 ? 0 : this.gameState.length - 1;
-                            this.gameState[num].claim(this.turn, symbol, this.jumpSize);
+                            this.claimEndAITurn(this.gameState[num], symbol, playerClaims, aiClaims);
+                            return;
                         }
                     }
                 }
@@ -110,53 +118,243 @@ class Game {
                 let index = playerClaims[i].getIndex();
                 let top = (index - 1), bottom = (index + 1), right = (index + this.size), left = (index - this.size);
                 if (this.isInBounds(top) && this.isOnSameRow(index, top)) {
+                    if (this.isInBounds(bottom)) {
+                        let topCS = this.findByIndex(top), bottomCS = this.findByIndex(bottom);
+                        if (topCS.getOwner() == 0 && bottomCS.getOwner() == null) {
+                            this.claimEndAITurn(bottomCS, symbol, playerClaims, aiClaims);
+                            return;
+                        } else if (bottomCS.getOwner() == 0 && topCS.getOwner() == null) {
+                            this.claimEndAITurn(topCS, symbol, playerClaims, aiClaims);
+                            return;
+                        }
+                    }
                     let farthest = (top - 1);
                     if (this.isInBounds(farthest) && this.isOnSameRow(top, farthest)) {
-                        if (this.findByIndex(top).getOwner() == 0) {
-                            if(this.findByIndex(farthest).getOwner() == null) this.findByIndex(farthest).claim(this.turn, symbol, this.jumpSize);
-                        } else if (this.findByIndex(farthest).getOwner() == 0) {
-                            if(this.findByIndex(top).getOwner() == null) this.findByIndex(top).claim(this.turn, symbol, this.jumpSize);
+                        let farthestCS = this.findByIndex(farthest), topCS = this.findByIndex(top);
+                        if (topCS.getOwner() == 0) {
+                            if (farthestCS.getOwner() == null) {
+                                this.claimEndAITurn(farthestCS, symbol, playerClaims, aiClaims);
+                                return;
+                            }
+                        } else if (farthestCS.getOwner() == 0) {
+                            if (topCS.getOwner() == null) {
+                                this.claimEndAITurn(topCS, symbol, playerClaims, aiClaims);
+                                return;
+                            }
                         }
                     }
                 }
                 if (this.isInBounds(bottom) && this.isOnSameRow(index, bottom)) {
                     let farthest = (bottom + 1);
                     if (this.isInBounds(farthest) && this.isOnSameRow(bottom, farthest)) {
-                        if (this.findByIndex(bottom).getOwner() == 0) {
-                            if(this.findByIndex(farthest).getOwner() == null) this.findByIndex(farthest).claim(this.turn, symbol, this.jumpSize);
-                        } else if (this.findByIndex(farthest).getOwner() == 0) {
-                            if(this.findByIndex(bottom).getOwner() == null) this.findByIndex(bottom).claim(this.turn, symbol, this.jumpSize);
+                        let farthestCS = this.findByIndex(farthest), bottomCS = this.findByIndex(bottom);
+                        if (bottomCS.getOwner() == 0) {
+                            if (farthestCS.getOwner() == null) {
+                                this.claimEndAITurn(farthestCS, symbol, playerClaims, aiClaims);
+                                return;
+                            }
+                        } else if (farthestCS.getOwner() == 0) {
+                            if (bottomCS.getOwner() == null) {
+                                this.claimEndAITurn(bottomCS, symbol, playerClaims, aiClaims);
+                                return;
+                            }
                         }
+                    }
+                }
+                if (this.isInBounds(right)) {
+                    if (this.isInBounds(left)) {
+                        let rightCS = this.findByIndex(right), leftCS = this.findByIndex(left);
+                        if (rightCS.getOwner() == 0 && leftCS.getOwner() == null) {
+                            this.claimEndAITurn(leftCS, symbol, playerClaims, aiClaims);
+                            return;
+                        } else if (leftCS.getOwner() == 0 && rightCS.getOwner() == null) {
+                            this.claimEndAITurn(rightCS, symbol, playerClaims, aiClaims);
+                            return;
+                        }
+                    }
+                    let farthest = (right + this.size);
+                    if (this.isInBounds(farthest)) {
+                        let farthestCS = this.findByIndex(farthest), rightCS = this.findByIndex(right);
+                        if (rightCS.getOwner() == 0) {
+                            if (farthestCS.getOwner() == null) {
+                                this.claimEndAITurn(farthestCS, symbol, playerClaims, aiClaims);
+                                return;
+                            }
+                        } else if (farthestCS.getOwner() == 0) {
+                            if (rightCS.getOwner() == null) {
+                                this.claimEndAITurn(rightCS, symbol, playerClaims, aiClaims);
+                                return;
+                            }
+                        }
+                    }
+                }
+                if (this.isInBounds(left)) {
+                    let farthest = (left - this.size);
+                    if (this.isInBounds(farthest)) {
+                        let farthestCS = this.findByIndex(farthest), leftCS = this.findByIndex(left);
+                        if (leftCS.getOwner() == 0) {
+                            if (farthestCS.getOwner() == null) {
+                                this.claimEndAITurn(farthestCS, symbol, playerClaims, aiClaims);
+                                return;
+                            }
+                        } else if (farthestCS.getOwner() == 0) {
+                            if (leftCS.getOwner() == null) {
+                                this.claimEndAITurn(leftCS, symbol, playerClaims, aiClaims);
+                                return;
+                            }
+                        }
+                    }
+                }
+                if (this.isInBounds(right)) {
+                    let rightCS = this.findByIndex(right);
+                    if (rightCS.getOwner() == null) {
+                        this.claimEndAITurn(rightCS, symbol, playerClaims, aiClaims);
+                        return;
+                    }
+                } else if (this.isInBounds(left)) {
+                    let leftCS = this.findByIndex(left);
+                    if (leftCS.getOwner() == null) {
+                        this.claimEndAITurn(leftCS, symbol, playerClaims, aiClaims);
+                        return;
+                    }
+                } else if (this.isInBounds(top)) {
+                    let topCS = this.findByIndex(top);
+                    if (topCS.getOwner() == null) {
+                        this.claimEndAITurn(topCS, symbol, playerClaims, aiClaims);
+                        return;
+                    }
+                } else if (this.isInBounds(bottom)) {
+                    let bottomCS = this.findByIndex(bottom);
+                    if (bottomCS.getOwner() == null) {
+                        this.claimEndAITurn(bottomCS, symbol, playerClaims, aiClaims);
+                        return;
                     }
                 }
             }
         }
-        this.turn = 0;
-        this.setDisplayWhosTurn("your")
+    }
+    claimEndAITurn(cs, symbol, playerClaims, aiClaims) {
+        cs.claim(this.turn, symbol, this.jumpSize);
+        if (!this.checkForWinCondition(playerClaims, aiClaims)) {
+            this.turn = 0;
+            this.setDisplayWhosTurn("your")
+        }
     }
 
-isInBounds(index) {
-    return index >= 0 && index < (this.size * this.size);
-}
-
-isOnSameRow(i1, i2) {
-    return Math.floor(i1 / this.size) == Math.floor(i2 / this.size);
-}
-
-isOnSameRowHorizontally(i1, i2) {
-}
-
-findByIndex(index) {
-    for (let i = 0; i < this.gameState.length; i++) {
-        if (this.gameState[i].getIndex() == index) return this.gameState[i];
+    checkForWinCondition(playerClaims, aiClaims) {
+        let emptyCell = false;
+        for (let i = 0; i < this.gameState.length; i++) {
+            if (this.gameState[i].getOwner() == null) {
+                emptyCell = true;
+                break;
+            }
+        }
+        if (!emptyCell) {
+            this.setDisplayWhosTurn("TIE");
+            return true;
+        }
+        for (let i = 0; i < playerClaims.length; i++) {
+            let index = playerClaims[i].getIndex();
+            let top = (index - 1), bottom = (index + 1), right = (index + this.size), left = (index - this.size);
+            if (this.isInBounds(top) && this.isInBounds(bottom)) {
+                let topCS = this.findByIndex(top), bottomCS = this.findByIndex(bottom);
+                if (topCS.getOwner() == 0 && bottomCS.getOwner() == 0) {
+                    if(this.size > 3) {
+                        let farthestTop = (top - 1), farthestBottom = (bottom + 1);
+                        if(this.isInBounds(farthestBottom) && this.isInBounds(farthestTop)) {
+                            let farthestBottomCS = this.findByIndex(farthestBottom), farthestTopCS = this.findByIndex(farthestTop);
+                            if(farthestBottomCS.getOwner() == 1 && farthestTopCS.getOwner() == 1) {
+                                this.setDisplayWhosTurn("WIN 1 size>3");
+                                return true;
+                            }
+                        }
+                    } else {
+                        this.setDisplayWhosTurn("WIN 1");
+                        return true;
+                    }
+                }
+            }
+            if (this.isInBounds(left) && this.isInBounds(right)) {
+                let leftCS = this.findByIndex(left), rightCS = this.findByIndex(right);
+                if (leftCS.getOwner() == 0 && rightCS.getOwner() == 0) {
+                    if(this.size > 3) {
+                        let farthestLeft = (left - this.size), farthestRight = (right + this.size);
+                        if(this.isInBounds(farthestLeft) && this.isInBounds(farthestRight)) {
+                            let farthestLeftCS = this.findByIndex(farthestLeft), farthestRightCS = this.findByIndex(farthestRight);
+                            if(farthestLeftCS.getOwner() == 1 && farthestRightCS.getOwner() == 1) {
+                                this.setDisplayWhosTurn("WIN 2 size>3");
+                                return true;
+                            }
+                        }
+                    } else {
+                        this.setDisplayWhosTurn("WIN 2");
+                        return true;
+                    }
+                }
+            }
+        }
+        for (let i = 0; i < aiClaims.length; i++) {
+            let index = aiClaims[i].getIndex();
+            let top = (index - 1), bottom = (index + 1), right = (index + this.size), left = (index - this.size);
+            if (this.isInBounds(top) && this.isInBounds(bottom) && this.isOnSameRow(top, bottom)) {
+                let topCS = this.findByIndex(top), bottomCS = this.findByIndex(bottom);
+                if (topCS.getOwner() == 1 && bottomCS.getOwner() == 1) {
+                    if(this.size > 3) {
+                        let farthestTop = (top - 1), farthestBottom = (bottom + 1);
+                        if(this.isInBounds(farthestBottom) && this.isInBounds(farthestTop)) {
+                            let farthestBottomCS = this.findByIndex(farthestBottom), farthestTopCS = this.findByIndex(farthestTop);
+                            if(farthestBottomCS.getOwner() == 1 && farthestTopCS.getOwner() == 1) {
+                                this.setDisplayWhosTurn("WIN 3 size>3");
+                                return true;
+                            }
+                        }
+                    } else {
+                        this.setDisplayWhosTurn("WIN 3");
+                        return true;
+                    }
+                }
+            }
+            if (this.isInBounds(left) && this.isInBounds(right)) {
+                let leftCS = this.findByIndex(left), rightCS = this.findByIndex(right);
+                if (leftCS.getOwner() == 1 && rightCS.getOwner() == 1) {
+                    if(this.size > 3) {
+                        let farthestLeft = (left - this.size), farthestRight = (right + this.size);
+                        if(this.isInBounds(farthestLeft) && this.isInBounds(farthestRight)) {
+                            let farthestLeftCS = this.findByIndex(farthestLeft), farthestRightCS = this.findByIndex(farthestRight);
+                            if(farthestLeftCS.getOwner() == 1 && farthestRightCS.getOwner() == 1) {
+                                this.setDisplayWhosTurn("WIN 4 size>3");
+                                return true;
+                            }
+                        }
+                    } else {
+                        this.setDisplayWhosTurn("WIN 4");
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
-    return null;
-}
 
-setDisplayWhosTurn(info) {
-    info = "&nbsp;" + info + "&nbsp;";
-    document.getElementById("turn-info").getElementsByTagName("span")[0].innerHTML = info;
-}
+    isInBounds(index) {
+        return index >= 0 && index < (this.size * this.size);
+    }
+
+    isOnSameRow(i1, i2) {
+        return Math.floor(i1 / this.size) == Math.floor(i2 / this.size);
+    }
+
+    findByIndex(index) {
+        for (let i = 0; i < this.gameState.length; i++) {
+            if (this.gameState[i].getIndex() == index) return this.gameState[i];
+        }
+        return null;
+    }
+
+    setDisplayWhosTurn(info) {
+        info = "&nbsp;" + info + "&nbsp;";
+        document.getElementById("turn-info").getElementsByTagName("span")[0].innerHTML = info;
+    }
 }
 
 export default Game;
