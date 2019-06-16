@@ -51,6 +51,13 @@ body {
   font-family: 'Dokdo', cursive;
 }
 
+#difficulty-info {
+  margin-top: 25px;
+  text-align: center;
+  font-size: 50px;
+  font-family: 'Dokdo', cursive;
+}
+
 #turn-info span {
   color: red;
   font-family: 'Dokdo', cursive;

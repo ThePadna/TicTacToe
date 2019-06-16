@@ -23,14 +23,16 @@ class App extends Component {
       this.gridSize = parseInt(size.substr(0, 1));
       return (
         <div id="wrapper">
+        <div id="game-wrapper">
           <div id="header">
             <p>TicTacToe</p>
           </div>
           <div id="canvas-wrapper">
             <canvas id="gamecanvas" height="500px" width="500px"></canvas>
           </div>
-          <p id="game-info"></p>
           <p id="turn-info"> It's<span>&nbsp;your&nbsp;</span>turn </p>
+          <p id="difficulty-info"></p>
+        </div>
         </div>
       );
     } else {
@@ -67,6 +69,23 @@ class App extends Component {
   componentDidUpdate() {
     if(this.state.inProgress) {
       this.gameInstance = new Game(this.gridSize, this.difficulty);
+      let difficulty = document.getElementById("difficulty-info");
+      difficulty.innerText = this.difficulty;
+      let color = "green";
+      switch(this.difficulty) {
+        case "Medium":
+          color = "orange"
+          break;
+        case "Hard":
+          color = "firebrick"
+          break;
+        case "Impossible":
+          color = "red";
+          break;
+        default:
+           break;
+      }
+      difficulty.style.color = color;
       this.gameInstance.draw();
     }
   }
