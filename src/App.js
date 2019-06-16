@@ -45,9 +45,9 @@ class App extends Component {
             <div id="gridsize">
               <h1>Grid Size</h1>
               <select>
-                <option>3x3</option>
-                <option>6x6</option>
-                <option>9x9</option>
+                <option>3x3 - Classic</option>
+                <option>6x6 - 5-in-a-row</option>
+                <option>9x9 - 5-in-a-row</option>
               </select>
             </div>
             <div id="aidifficulty">

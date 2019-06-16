@@ -74,7 +74,9 @@ class Game {
         for (let i = 0; i < this.gameState.length; i++) {
             let sel = this.gameState[i].getSelection();
             if (sel.contains(cc)) {
-                this.gameState[i].claim(this.turn, this.p1Symbol, jumpSize);
+                let cs = this.gameState[i];
+                if(cs.getOwner() != null) return;
+                cs.claim(this.turn, this.p1Symbol, jumpSize);
                 let aiClaims = [], playerClaims = [];
                 let found = false;
                 for (let i = 0; i < this.gameState.length; i++) {
@@ -216,28 +218,31 @@ class Game {
                         }
                     }
                 }
+                if (this.isInBounds(top)) {
+                    let topCS = this.findByIndex(top);
+                    if (topCS.getOwner() == null) {
+                        this.claimEndAITurn(topCS, symbol, playerClaims, aiClaims);
+                        return;
+                    }
+                }
+                 if (this.isInBounds(bottom)) {
+                    let bottomCS = this.findByIndex(bottom);
+                    if (bottomCS.getOwner() == null) {
+                        this.claimEndAITurn(bottomCS, symbol, playerClaims, aiClaims);
+                        return;
+                    }
+                }
                 if (this.isInBounds(right)) {
                     let rightCS = this.findByIndex(right);
                     if (rightCS.getOwner() == null) {
                         this.claimEndAITurn(rightCS, symbol, playerClaims, aiClaims);
                         return;
                     }
-                } else if (this.isInBounds(left)) {
+                }
+                 if (this.isInBounds(left)) {
                     let leftCS = this.findByIndex(left);
                     if (leftCS.getOwner() == null) {
                         this.claimEndAITurn(leftCS, symbol, playerClaims, aiClaims);
-                        return;
-                    }
-                } else if (this.isInBounds(top)) {
-                    let topCS = this.findByIndex(top);
-                    if (topCS.getOwner() == null) {
-                        this.claimEndAITurn(topCS, symbol, playerClaims, aiClaims);
-                        return;
-                    }
-                } else if (this.isInBounds(bottom)) {
-                    let bottomCS = this.findByIndex(bottom);
-                    if (bottomCS.getOwner() == null) {
-                        this.claimEndAITurn(bottomCS, symbol, playerClaims, aiClaims);
                         return;
                     }
                 }
@@ -267,7 +272,7 @@ class Game {
         for (let i = 0; i < playerClaims.length; i++) {
             let index = playerClaims[i].getIndex();
             let top = (index - 1), bottom = (index + 1), right = (index + this.size), left = (index - this.size);
-            if (this.isInBounds(top) && this.isInBounds(bottom)) {
+            if (this.isInBounds(top) && this.isInBounds(bottom) && this.isOnSameRow(top, bottom)) {
                 let topCS = this.findByIndex(top), bottomCS = this.findByIndex(bottom);
                 if (topCS.getOwner() == 0 && bottomCS.getOwner() == 0) {
                     if(this.size > 3) {
