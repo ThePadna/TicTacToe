@@ -8,7 +8,18 @@ import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
 class Game {
 
-    constructor(gridSize) {
+    constructor(gridSize, difficulty) {
+        this.missPlay = 10;
+        switch(difficulty) {
+            case "Easy":
+                this.missPlay = 30;
+            case "Medium":
+                this.missPlay = 20;
+            case "Hard":
+                this.missPlay = 10;
+            case "Impossible":
+                this.missPlay = 0;
+        }
         this.size = gridSize;
         this.jumpSize = null;
         this.gameState = [gridSize * gridSize];
@@ -86,7 +97,7 @@ class Game {
     // missPlay should be a value from 0-100 which acts as a percentage value of which the AI will missplay
     // A missplay will go strictly for win condition and not try to play defense
     aiTakeTurn() {
-        let missPlay = 10, symbol = this.p1Symbol === "x" ? "o" : "x";
+        let symbol = this.p1Symbol === "x" ? "o" : "x";
         let rdm = Math.random() * 100;
         let aiClaims = [], playerClaims = [];
         let found = false;
