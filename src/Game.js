@@ -308,6 +308,26 @@ class Game {
                     }
                 }
             }
+            let topLeft = top - this.size;
+            let bottomRight = bottom + this.size;
+            if(this.isInBounds(topLeft) && this.isInBounds(bottomRight)) {
+                let topLeftCS = this.findByIndex(topLeft), bottomRightCS = this.findByIndex(bottomRight);
+                if(topLeftCS.getOwner() == 0 && bottomRightCS.getOwner() == 0) {
+                    if(this.size > 3) {
+                        let farthestTopLeft = (topLeft - 1) - this.size, farthestBottomRight = (bottomRight + 1) + this.size;
+                        if(this.isInBounds(farthestTopLeft) && this.isInBounds(farthestBottomRight)) {
+                            let farthestTopLeftCS = this.findByIndex(farthestTopLeft), farthestBottomRightCS = this.findByIndex(farthestBottomRight);
+                            if(farthestTopLeftCS.getOwner() == 0 && farthestBottomRightCS.getOwner() == 0) {
+                                this.setDisplayWhosTurn("WIN 6 size>3");
+                                return true;
+                            }
+                        }
+                    } else {
+                        this.setDisplayWhosTurn("WIN 6")
+                        return true;
+                    }
+                }
+            }
         }
         for (let i = 0; i < aiClaims.length; i++) {
             let index = aiClaims[i].getIndex();
@@ -344,6 +364,26 @@ class Game {
                         }
                     } else {
                         this.setDisplayWhosTurn("WIN 4");
+                        return true;
+                    }
+                }
+            }
+            let topLeft = top - this.size;
+            let bottomRight = bottom + this.size;
+            if(this.isInBounds(topLeft) && this.isInBounds(bottomRight)) {
+                let topLeftCS = this.findByIndex(topLeft), bottomRightCS = this.findByIndex(bottomRight);
+                if(topLeftCS.getOwner() == 1 && bottomRightCS.getOwner() == 1) {
+                    if(this.size > 3) {
+                        let farthestTopLeft = (topLeft - 1) - this.size, farthestBottomRight = (bottomRight + 1) + this.size;
+                        if(this.isInBounds(farthestTopLeft) && this.isInBounds(farthestBottomRight)) {
+                            let farthestTopLeftCS = this.findByIndex(farthestTopLeft), farthestBottomRightCS = this.findByIndex(farthestBottomRight);
+                            if(farthestTopLeftCS.getOwner() == 1 && farthestBottomRightCS.getOwner() == 1) {
+                                this.setDisplayWhosTurn("WIN 5 size>3");
+                                return true;
+                            }
+                        }
+                    } else {
+                        this.setDisplayWhosTurn("WIN 5")
                         return true;
                     }
                 }
