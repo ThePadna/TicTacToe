@@ -3,8 +3,6 @@ import CanvasCoordinates from './wrappers/CanvasCoordinates'
 import CanvasCoordinatesSelection from './wrappers/CanvasCoordinatesSelection'
 import DrawCircleAnim from './tasks/DrawCircleAnim'
 import DrawCrossAnim from './tasks/DrawCrossAnim'
-import { throws } from 'assert';
-import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
 class Game {
 
@@ -26,6 +24,31 @@ class Game {
         this.turn = 0;
         this.p1Symbol = (Math.random() * 2) < 1 ? "x" : "o";
         this.aiTakeTurn = this.aiTakeTurn.bind(this);
+        this.edgeCells = [];
+        let num = 0;
+        for(let i = 0; i < this.size; i++) {
+            this.edgeCells.push(num);
+            num++;
+        }
+        num = this.size-1;
+        for(let i = 0; i < this.size; i++) {
+            this.edgeCells.push(num);
+            num += this.size;
+        }
+        num = 0;
+        for(let i = 0; i < this.size; i++) {
+            this.edgeCells.push(num);
+            num++;
+        }
+        num = (this.size*this.size) - this.size;
+        for(let i = 0; i < this.size; i++) {
+            this.edgeCells.push(num);
+            num++;
+        }
+        console.log("All edge cells: ");
+        for(let i = 0; i < this.edgeCells.length; i++) {
+            console.log(this.edgeCells[i]);
+        }
     }
 
     draw() {
@@ -99,7 +122,6 @@ class Game {
     // missPlay should be a value from 0-100 which acts as a percentage value of which the AI will missplay
     // A missplay will go strictly for win condition and not try to play defense
     aiTakeTurn() {
-        console.log("take turnOOOO");
         let symbol = this.p1Symbol === "x" ? "o" : "x";
         let rdm = Math.random() * 100;
         let aiClaims = [], playerClaims = [];
@@ -130,19 +152,15 @@ class Game {
         } else {
             if (this.size > 3) {
                 for (let i = 0; i < playerClaims.length; i++) {
-                    console.log("test")
+                    //block
                     let index = playerClaims[i].getIndex();
                     let top = (index - 1), bottom = (index + 1), right = (index + this.size), left = (index - this.size);
                     if (this.size > 3) {
                         if (this.isInBounds(top) && this.isOnSameRow(index, top) && this.isInBounds(bottom) && this.isOnSameRow(index, bottom)) {
-                            console.log("debug1");
                             let topFarthest = top - 1, bottomFarthest = bottom + 1;
                             if (this.isInBounds(topFarthest) && this.isOnSameRow(index, topFarthest) && this.isInBounds(bottomFarthest) && this.isOnSameRow(bottomFarthest, index)) {
-                                console.log("debug2");
                                 let topCS = this.findByIndex(top), bottomCS = this.findByIndex(bottom), topFarthestCS = this.findByIndex(topFarthest), bottomFarthestCS = this.findByIndex(bottomFarthest);
-                                console.log("Boxes " + topFarthest + " " + top + " " + index + " " + bottom);
                                 if (topCS.getOwner() == 0 && bottomCS.getOwner() == 0 && topFarthestCS.getOwner() == 0 && bottomFarthestCS.getOwner() == null) {
-                                    console.log("debug3");
                                     this.claimEndAITurn(bottomFarthestCS, symbol, playerClaims, aiClaims);
                                     return;
                                 }
@@ -158,51 +176,120 @@ class Game {
                                     this.claimEndAITurn(bottomCS, symbol, playerClaims, aiClaims);
                                     return;
                                 }
-                                if(bottomCS.getOwner() == 0 && bottomFarthestCS.getOwner() == 0 && topCS.getOwner() == null) {
+                                if (bottomCS.getOwner() == 0 && bottomFarthestCS.getOwner() == 0 && topCS.getOwner() == null) {
                                     this.claimEndAITurn(topCS, symbol, playerClaims, aiClaims);
                                     return;
                                 }
-                                if(topCS.getOwner() == 0 && topFarthestCS.getOwner() == 0 && bottomCS.getOwner() == 0 && bottomFarthestCS.getOwner() == null) {
-                                    console.log("this 1");
+                                if (topCS.getOwner() == 0 && topFarthestCS.getOwner() == 0 && bottomCS.getOwner() == 0 && bottomFarthestCS.getOwner() == null) {
                                     this.claimEndAITurn(bottomFarthestCS, symbol, playerClaims, aiClaims);
                                     return;
                                 }
-                                if(topCS.getOwner() == 0 && bottomCS.getOwner() == 0) {
-                                    console.log("debug4");
+                                if (topCS.getOwner() == 0 && bottomCS.getOwner() == 0) {
                                     let topReached = false, bottomReached = false;
                                     let count = 0;
-                                    while(!topReached) {
+                                    while (!topReached) {
                                         count++;
                                         let space = topFarthest - count;
-                                        if(!this.isInBounds(space) || !this.isOnSameRow(index, space)) {
+                                        if (!this.isInBounds(space) || !this.isOnSameRow(index, space)) {
                                             topReached = true;
                                         }
                                     }
                                     let count1 = 0;
-                                    while(!bottomReached) {
+                                    while (!bottomReached) {
                                         count1++;
                                         let space = bottomFarthest + count1;
-                                        if(!this.isInBounds(space) || !this.isOnSameRow(index, space)) {
+                                        if (!this.isInBounds(space) || !this.isOnSameRow(index, space)) {
                                             bottomReached = true;
                                         }
                                     }
-                                    if(count > count1 && topFarthestCS.getOwner() == null) {
+                                    if (count > count1 && topFarthestCS.getOwner() == null) {
                                         this.claimEndAITurn(topFarthestCS, symbol, playerClaims, aiClaims);
                                         return;
-                                    } else if(count1 > count && bottomFarthestCS.getOwner() == null) {
+                                    } else if (count1 > count && bottomFarthestCS.getOwner() == null) {
                                         this.claimEndAITurn(bottomFarthestCS, symbol, playerClaims, aiClaims);
                                         return;
                                     } else {
                                         let cs = null;
-                                        if(topFarthestCS.getOwner() != null) {
+                                        if (topFarthestCS.getOwner() != null) {
                                             cs = bottomFarthestCS;
-                                        } else if(bottomFarthestCS.getOwner() != null) {
+                                        } else if (bottomFarthestCS.getOwner() != null) {
                                             cs = topFarthestCS;
                                         } else {
                                             cs = (Math.random() * 2) < 1 ? topFarthestCS : bottomFarthestCS;
                                         }
+                                        if(cs.getOwner() == null) {
                                         this.claimEndAITurn(cs, symbol, playerClaims, aiClaims);
                                         return;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (this.isInBounds(left) && this.isInBounds(right)) {
+                            let leftFarthest = left - this.size, rightFarthest = right + this.size;
+                            if (this.isInBounds(leftFarthest) && this.isInBounds(rightFarthest)) {
+                                let leftCS = this.findByIndex(left), rightCS = this.findByIndex(right), leftFarthestCS = this.findByIndex(leftFarthest), rightFarthestCS = this.findByIndex(rightFarthest);
+                                if (leftCS.getOwner() == 0 && rightCS.getOwner() == 0 && leftFarthestCS.getOwner() == 0 && rightFarthestCS.getOwner() == null) {
+                                    this.claimEndAITurn(rightFarthestCS, symbol, playerClaims, aiClaims);
+                                    return;
+                                }
+                                if (leftCS.getOwner() == 0 && rightCS.getOwner() == 0 && rightFarthestCS.getOwner() == 0 && leftFarthestCS.getOwner() == null) {
+                                    this.claimEndAITurn(leftFarthestCS, symbol, playerClaims, aiClaims);
+                                    return;
+                                }
+                                if (rightCS.getOwner() == 0 && rightFarthestCS.getOwner() == 0 && leftFarthestCS.getOwner() == 0 && leftCS.getOwner() == null) {
+                                    this.claimEndAITurn(leftCS, symbol, playerClaims, aiClaims);
+                                    return;
+                                }
+                                if (leftCS.getOwner() == 0 && rightFarthestCS.getOwner() == 0 && leftFarthestCS.getOwner() == 0 && rightCS.getOwner() == null) {
+                                    this.claimEndAITurn(rightCS, symbol, playerClaims, aiClaims);
+                                    return;
+                                }
+                                if (leftCS.getOwner() == 0 && rightFarthestCS.getOwner() == 0 && rightCS.getOwner() == null) {
+                                    this.claimEndAITurn(rightCS, symbol, playerClaims, aiClaims);
+                                    return;
+                                }
+                                if (rightCS.getOwner() == 0 && leftFarthestCS.getOwner() == 0 && leftCS.getOwner() == 0) {
+                                    this.claimEndAITurn(leftCS, symbol, playerClaims, aiClaims);
+                                    return;
+                                }
+                                if (leftCS.getOwner() == 0 && rightCS.getOwner() == 0) {
+                                    let leftReached = false, rightReached = false;
+                                    let count = 0;
+                                    while (!leftReached) {
+                                        count+=this.size;
+                                        let space = leftFarthest - count;
+                                        if (!this.isInBounds(space) || this.findByIndex(space).getOwner() == 0) {
+                                            leftReached = true;
+                                        }
+                                    }
+                                    let count1 = 0;
+                                    while (!rightReached) {
+                                        count1+=this.size;
+                                        let space = rightFarthest + count1;
+                                        if (!this.isInBounds(space) || this.findByIndex(space).getOwner() == 0) {
+                                            rightReached = true;
+                                        }
+                                    }
+                                    if (count > count1 && leftFarthestCS.getOwner() == null) {
+                                        this.claimEndAITurn(leftFarthestCS, symbol, playerClaims, aiClaims);
+                                        return;
+                                    } else if (count1 > count && rightFarthestCS.getOwner() == null) {
+                                        this.claimEndAITurn(rightFarthestCS, symbol, playerClaims, aiClaims);
+                                        return;
+                                    } else {
+                                        let cs = null;
+                                        if (leftFarthestCS.getOwner() != null) {
+                                            cs = leftFarthestCS;
+                                        } else if (rightFarthestCS.getOwner() != null) {
+                                            cs = rightFarthestCS;
+                                        } else {
+                                            cs = (Math.random() * 2) < 1 ? leftFarthestCS : rightFarthestCS;
+                                        }
+                                        if(cs.getOwner() == null) {
+                                        this.claimEndAITurn(cs, symbol, playerClaims, aiClaims);
+                                        return;
+                                        }
                                     }
                                 }
                             }
@@ -211,56 +298,146 @@ class Game {
                 }
             }
 
-            for(let i = 0; i < aiClaims.length; i++) {
+            let scoresOblique = [], scoresVertical = [], scoresHorizontal = [];
+            for (let i = 0; i < aiClaims.length; i++) {
+                //hunt
                 let index = aiClaims[i].getIndex();
                 let top = (index - 1), bottom = (index + 1), right = (index + this.size), left = (index - this.size), topLeft = (top - this.size), topRight = (top + this.size), bottomLeft = (bottom - this.size), bottomRight = (bottom + this.size);
-                if(this.size === 3) {
-                    if(this.isInBounds(top) && this.isInBounds(bottom) && this.isOnSameRow(index, top) && this.isOnSameRow(index, bottom)) {
-                        let topCS = this.findByIndex(top), bottomCS = this.findByIndex(bottom);
-                        if(topCS.getOwner() == 1 && bottomCS.getOwner() == null) {
-                            this.claimEndAITurn(bottomCS, symbol, playerClaims, aiClaims);
-                            return;
-                        }
-                        if(bottomCS.getOwner() == 1 && topCS.getOwner() == null) {
-                            this.claimEndAITurn(topCS, symbol, playerClaims, aiClaims);
-                            return;
+                if (this.size > 3) {
+                    if (this.isInBounds(top) && this.isInBounds(bottom) && this.isOnSameRow(index, top) && this.isOnSameRow(index, bottom)) {
+                        let topFarthest = top - 1, bottomFarthest = bottom + 1;
+                        if (this.isInBounds(topFarthest) && this.isInBounds(bottomFarthest)) {
+                            let topFarthestCS = this.findByIndex(topFarthest), bottomFarthestCS = this.findByIndex(bottomFarthest), topCS = this.findByIndex(top), bottomCS = this.findByIndex(bottom);
+                            let score = 0;
+                            if(topFarthestCS.getOwner() != null) score += topFarthestCS.getOwner();
+                            if(bottomFarthestCS.getOwner() != null) score += bottomFarthestCS.getOwner();
+                            if(topCS.getOwner() != null) score += topFarthestCS.getOwner();
+                            if(bottomCS.getOwner() != null) score += topFarthestCS.getOwner();
+                            if (topFarthestCS.getOwner() == 1 && topCS.getOwner() == 1) {
+                                if(bottomCS.getOwner() == 1) {
+                                    if(bottomFarthestCS.getOwner() == null) {
+                                        scoresOblique.push([score, bottomFarthestCS]);
+                                        continue;
+                                    }
+                                } else if(bottomFarthestCS.getOwner() == 1) {
+                                    if(bottomCS.getOwner() == null) {
+                                        scoresOblique.push([score, bottomCS]);
+                                        continue;
+                                    }
+                                } else {
+                                    let cs = Math.random() * 2 < 1 ? bottomCS : bottomFarthestCS;
+                                    scoresOblique.push([score, cs]);
+                                    continue;
+                                }
+                            }
+                            if(bottomCS.getOwner() == 1 && bottomFarthestCS.getOwner() == 1) {
+                                if(topCS.getOwner() == 1) {
+                                    if(topFarthestCS.getOwner() == null) {
+                                        scoresOblique.push([score, topFarthestCS]);
+                                        continue;
+                                    }
+                                } else if(topFarthestCS.getOwner() == 1) {
+                                    if(topCS.getOwner() == null) {
+                                        scoresOblique.push([score, topCS]);
+                                        continue;
+                                    }
+                                } else {
+                                    let cs = Math.random() * 2 < 1 ? topCS : topFarthestCS;
+                                    scoresOblique.push([score, cs]);
+                                    continue;
+                                }
+                            }
+                            if(bottomCS.getOwner() == 1 && topCS.getOwner() == 1) {
+                                if(topFarthestCS.getOwner() == 1) {
+                                    if(bottomFarthestCS.getOwner() == null) {
+                                        scoresOblique.push([score, bottomFarthestCS]);
+                                        continue;
+                                    }
+                                } else if(bottomFarthestCS.getOwner() == 1) {
+                                    if(topFarthestCS.getOwner() == null) {
+                                        scoresOblique.push([score, topFarthestCS]);
+                                        continue;
+                                    }
+                                } else {
+                                    let cs = Math.random() * 2 < 1 ? bottomFarthestCS : topFarthestCS;
+                                    scoresOblique.push([score, cs]);
+                                    continue;
+                                }
+                            }
+                            if(topFarthestCS.getOwner() == 1 && bottomFarthestCS.getOwner() == 1) {
+                                if(topCS.getOwner() == 1) {
+                                    if(bottomCS.getOwner() == null) {
+                                        scoresOblique.push([score, bottomCS]);
+                                        continue;
+                                    }
+                                } else if(bottomCS.getOwner() == 1) {
+                                    if(topCS.getOwner() == null) {
+                                        scoresOblique.push([score, topCS]);
+                                        continue;
+                                    }
+                                } else {
+                                    let cs = Math.random() * 2 < 1 ? topCS : bottomCS;
+                                    scoresOblique.push([score, cs]);
+                                    continue;
+                                }
+                            }
                         }
                     }
-                    if(this.isInBounds(right) && this.isInBounds(left)) {
-                        let leftCS = this.findByIndex(left), rightCS = this.findByIndex(right);
-                        if(leftCS.getOwner() == 1 && rightCS.getOwner() == null) {
-                            this.claimEndAITurn(rightCS, symbol, playerClaims, aiClaims);
-                            return;
-                        }
-                        if(rightCS.getOwner() == 1 && leftCS.getOwner() == null) {
-                            this.claimEndAITurn(leftCS, symbol, playerClaims, aiClaims);
-                            return;
-                        }
+                }
+                let currentHighest = null;
+                for(let i = 0; i < scoresOblique.length; i++) {
+                    let score = scoresOblique[i][0];
+                    if(currentHighest != null) {
+                        if(score > currentHighest[0]) currentHighest = scoresOblique[i];
+                    } else currentHighest = scoresOblique[i];
+                }
+                if(currentHighest != null) {
+                    this.claimEndAITurn(currentHighest[1], symbol, playerClaims, aiClaims);
+                    return;
+                }
+                if (this.isInBounds(top) && this.isInBounds(bottom) && this.isOnSameRow(index, top) && this.isOnSameRow(index, bottom)) {
+                    let topCS = this.findByIndex(top), bottomCS = this.findByIndex(bottom);
+                    if (topCS.getOwner() == 1 && bottomCS.getOwner() == null) {
+                        this.claimEndAITurn(bottomCS, symbol, playerClaims, aiClaims);
+                        return;
                     }
-                    if(this.isInBounds(topLeft) && this.isInBounds(bottomRight)) {
-                        let topLeftCS = this.findByIndex(topLeft), bottomRightCS = this.findByIndex(bottomRight);
-                        if(topLeftCS.getOwner() == 1 && bottomRightCS.getOwner() == null) {
-                            this.claimEndAITurn(bottomRightCS, symbol, playerClaims, aiClaims);
-                            return;
-                        }
-                        if(bottomRightCS.getOwner() == 1 && topLeftCS.getOwner() == null) {
-                            this.claimEndAITurn(topLeftCS, symbol, playerClaims, aiClaims);
-                            return;
-                        }
+                    if (bottomCS.getOwner() == 1 && topCS.getOwner() == null) {
+                        this.claimEndAITurn(topCS, symbol, playerClaims, aiClaims);
+                        return;
                     }
-                    if(this.isInBounds(topRight) && this.isInBounds(bottomLeft)) {
-                        let topRightCS = this.findByIndex(topRight), bottomLeftCS = this.findByIndex(bottomLeft);
-                        if(topRightCS.getOwner() == 1 && bottomLeftCS.getOwner() == null) {
-                            this.claimEndAITurn(bottomLeftCS, symbol, playerClaims, aiClaims);
-                            return;
-                        }
-                        if(bottomLeftCS.getOwner() == 1 && topRightCS.getOwner() == null) {
-                            this.claimEndAITurn(topRightCS, symbol, playerClaims, aiClaims);
-                            return;
-                        }
+                }
+                if (this.isInBounds(right) && this.isInBounds(left)) {
+                    let leftCS = this.findByIndex(left), rightCS = this.findByIndex(right);
+                    if (leftCS.getOwner() == 1 && rightCS.getOwner() == null) {
+                        this.claimEndAITurn(rightCS, symbol, playerClaims, aiClaims);
+                        return;
                     }
-                } else {
-
+                    if (rightCS.getOwner() == 1 && leftCS.getOwner() == null) {
+                        this.claimEndAITurn(leftCS, symbol, playerClaims, aiClaims);
+                        return;
+                    }
+                }
+                if (this.isInBounds(topLeft) && this.isInBounds(bottomRight)) {
+                    let topLeftCS = this.findByIndex(topLeft), bottomRightCS = this.findByIndex(bottomRight);
+                    if (topLeftCS.getOwner() == 1 && bottomRightCS.getOwner() == null) {
+                        this.claimEndAITurn(bottomRightCS, symbol, playerClaims, aiClaims);
+                        return;
+                    }
+                    if (bottomRightCS.getOwner() == 1 && topLeftCS.getOwner() == null) {
+                        this.claimEndAITurn(topLeftCS, symbol, playerClaims, aiClaims);
+                        return;
+                    }
+                }
+                if (this.isInBounds(topRight) && this.isInBounds(bottomLeft)) {
+                    let topRightCS = this.findByIndex(topRight), bottomLeftCS = this.findByIndex(bottomLeft);
+                    if (topRightCS.getOwner() == 1 && bottomLeftCS.getOwner() == null) {
+                        this.claimEndAITurn(bottomLeftCS, symbol, playerClaims, aiClaims);
+                        return;
+                    }
+                    if (bottomLeftCS.getOwner() == 1 && topRightCS.getOwner() == null) {
+                        this.claimEndAITurn(topRightCS, symbol, playerClaims, aiClaims);
+                        return;
+                    }
                 }
             }
             for (let i = 0; i < playerClaims.length; i++) {
@@ -443,12 +620,12 @@ class Game {
         for (let i = 0; i < playerClaims.length; i++) {
             let index = playerClaims[i].getIndex();
             let top = (index - 1), bottom = (index + 1), right = (index + this.size), left = (index - this.size);
-            if (this.isInBounds(top) && this.isInBounds(bottom) && this.isOnSameRow(top, bottom)) {
+            if (this.isInBounds(top) && this.isInBounds(bottom) && this.isOnSameRow(index, top) && this.isOnSameRow(index, bottom)) {
                 let topCS = this.findByIndex(top), bottomCS = this.findByIndex(bottom);
                 if (topCS.getOwner() == 0 && bottomCS.getOwner() == 0) {
                     if (this.size > 3) {
                         let farthestTop = (top - 1), farthestBottom = (bottom + 1);
-                        if (this.isInBounds(farthestBottom) && this.isInBounds(farthestTop)) {
+                        if (this.isInBounds(farthestBottom) && this.isInBounds(farthestTop) && this.isOnSameRow(index, farthestTop) && this.isOnSameRow(index, farthestBottom)) {
                             let farthestBottomCS = this.findByIndex(farthestBottom), farthestTopCS = this.findByIndex(farthestTop);
                             if (farthestBottomCS.getOwner() == 0 && farthestTopCS.getOwner() == 0) {
                                 this.setDisplayWhosTurn("WIN 1 size>3");
@@ -468,7 +645,7 @@ class Game {
                         let farthestLeft = (left - this.size), farthestRight = (right + this.size);
                         if (this.isInBounds(farthestLeft) && this.isInBounds(farthestRight)) {
                             let farthestLeftCS = this.findByIndex(farthestLeft), farthestRightCS = this.findByIndex(farthestRight);
-                            if (farthestLeftCS.getOwner() == 1 && farthestRightCS.getOwner() == 1) {
+                            if (farthestLeftCS.getOwner() == 0 && farthestRightCS.getOwner() == 0) {
                                 this.setDisplayWhosTurn("WIN 2 size>3");
                                 return true;
                             }
@@ -485,7 +662,7 @@ class Game {
                 let topRightCS = this.findByIndex(topRight), bottomLeftCS = this.findByIndex(bottomLeft);
                 if (topRightCS.getOwner() == 0 && bottomLeftCS.getOwner() == 0) {
                     if (this.size > 3) {
-                        let farthestTopRight = (topRight - 1) - this.size, farthestBottomLeft = (bottomLeft + 1) + this.size;
+                        let farthestTopRight = (topRight - 1) + this.size, farthestBottomLeft = (bottomLeft + 1) - this.size;
                         if (this.isInBounds(farthestTopRight) && this.isInBounds(farthestBottomLeft)) {
                             let farthestTopRightCS = this.findByIndex(farthestTopRight), farthestBottomLeftCS = this.findByIndex(farthestBottomLeft);
                             if (farthestTopRightCS.getOwner() == 0 && farthestBottomLeftCS.getOwner() == 0) {
@@ -559,6 +736,27 @@ class Game {
                     }
                 }
             }
+            let topRight = top + this.size;
+            let bottomLeft = bottom - this.size;
+            if (this.isInBounds(bottomLeft) && this.isInBounds(topRight)) {
+                let topRightCS = this.findByIndex(topRight), bottomLeftCS = this.findByIndex(bottomLeft);
+                if (topRightCS.getOwner() == 1 && bottomLeftCS.getOwner() == 1) {
+                    if (this.size > 3) {
+                        let farthestTopRight = (topRight - 1) + this.size, farthestBottomLeft = (bottomLeft + 1) - this.size;
+                        if (this.isInBounds(farthestTopRight) && this.isInBounds(farthestBottomLeft)) {
+                            let farthestTopRightCS = this.findByIndex(farthestTopRight), farthestBottomLeftCS = this.findByIndex(farthestBottomLeft);
+                            console.log("coords: " + farthestTopRight + " " + topRight + " " + index + " " + bottomLeft + " " + farthestBottomLeft);
+                            if (farthestTopRightCS.getOwner() == 1 && farthestBottomLeftCS.getOwner() == 1) {
+                                this.setDisplayWhosTurn("WIN 7 size>3");
+                                return true;
+                            }
+                        }
+                    } else {
+                        this.setDisplayWhosTurn("WIN 7")
+                        return true;
+                    }
+                }
+            }
         }
         return false;
     }
@@ -574,19 +772,19 @@ class Game {
     isOnSameRowHorizontally(i1, i2) {
         let num = 0;
         let foundEnd = false;
-        while(!foundEnd) {
+        while (!foundEnd) {
             num += this.size;
             let i1NextRow = i1 + num;
-            if(!this.isInBounds(i1NextRow)) foundEnd = true;
-            if(i1NextRow == i2) return true;
+            if (!this.isInBounds(i1NextRow)) foundEnd = true;
+            if (i1NextRow == i2) return true;
         }
         foundEnd = false;
         num = 0;
-        while(!foundEnd) {
+        while (!foundEnd) {
             num -= this.size;
             let i1PrevRow = i1 - num;
-            if(!this.isInBounds(i1PrevRow)) foundEnd = true;
-            if(i1PrevRow == i2) return true;
+            if (!this.isInBounds(i1PrevRow)) foundEnd = true;
+            if (i1PrevRow == i2) return true;
         }
         return false;
     }
