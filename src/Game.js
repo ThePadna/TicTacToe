@@ -3,6 +3,7 @@ import CanvasCoordinates from './wrappers/CanvasCoordinates'
 import CanvasCoordinatesSelection from './wrappers/CanvasCoordinatesSelection'
 import DrawCircleAnim from './tasks/DrawCircleAnim'
 import DrawCrossAnim from './tasks/DrawCrossAnim'
+import { read } from 'fs';
 
 class Game {
 
@@ -52,6 +53,7 @@ class Game {
     }
 
     draw() {
+        this.setDisplayWhosTurn("your");
         let canv = document.getElementById("gamecanvas");
         let MIN_WIDTH = 0, MIN_HEIGHT = 0, MAX_WIDTH = canv.width, MAX_HEIGHT = canv.height;
         let ctx = document.querySelector("#gamecanvas").getContext("2d");
@@ -326,8 +328,10 @@ class Game {
                                     }
                                 } else {
                                     let cs = Math.random() * 2 < 1 ? bottomCS : bottomFarthestCS;
+                                    if(cs.getOwner() == null) {
                                     scoresOblique.push([score, cs]);
                                     continue;
+                                    }
                                 }
                             }
                             if(bottomCS.getOwner() == 1 && bottomFarthestCS.getOwner() == 1) {
@@ -343,8 +347,10 @@ class Game {
                                     }
                                 } else {
                                     let cs = Math.random() * 2 < 1 ? topCS : topFarthestCS;
-                                    scoresOblique.push([score, cs]);
-                                    continue;
+                                    if(cs.getOwner() == null) {
+                                        scoresOblique.push([score, cs]);
+                                        continue;
+                                    }
                                 }
                             }
                             if(bottomCS.getOwner() == 1 && topCS.getOwner() == 1) {
@@ -360,8 +366,10 @@ class Game {
                                     }
                                 } else {
                                     let cs = Math.random() * 2 < 1 ? bottomFarthestCS : topFarthestCS;
-                                    scoresOblique.push([score, cs]);
-                                    continue;
+                                    if(cs.getOwner() == null) {
+                                        scoresOblique.push([score, cs]);
+                                        continue;
+                                    }
                                 }
                             }
                             if(topFarthestCS.getOwner() == 1 && bottomFarthestCS.getOwner() == 1) {
@@ -377,8 +385,10 @@ class Game {
                                     }
                                 } else {
                                     let cs = Math.random() * 2 < 1 ? topCS : bottomCS;
-                                    scoresOblique.push([score, cs]);
-                                    continue;
+                                    if(cs.getOwner() == null) {
+                                        scoresOblique.push([score, cs]);
+                                        continue;
+                                    }
                                 }
                             }
                         }
@@ -640,7 +650,7 @@ class Game {
             }
             if (this.isInBounds(left) && this.isInBounds(right)) {
                 let leftCS = this.findByIndex(left), rightCS = this.findByIndex(right);
-                if (leftCS.getOwner() == 0 && rightCS.getOwner() == 0) {
+                if (!this.isHittingEdge(left) && !this.isHittingEdge(right) && !this.isHittingEdge(index) && leftCS.getOwner() == 0 && rightCS.getOwner() == 0) {
                     if (this.size > 3) {
                         let farthestLeft = (left - this.size), farthestRight = (right + this.size);
                         if (this.isInBounds(farthestLeft) && this.isInBounds(farthestRight)) {
@@ -660,18 +670,39 @@ class Game {
             let bottomLeft = bottom - this.size;
             if (this.isOnSameRow(index, top) && this.isOnSameRow(index, bottom) && this.isInBounds(topRight) && this.isInBounds(bottomLeft)) {
                 let topRightCS = this.findByIndex(topRight), bottomLeftCS = this.findByIndex(bottomLeft);
-                if (topRightCS.getOwner() == 0 && bottomLeftCS.getOwner() == 0) {
+                if (!this.isHittingEdge(topRight) && !this.isHittingEdge(bottomLeft) && !this.isHittingEdge(index) && topRightCS.getOwner() == 0 && bottomLeftCS.getOwner() == 0) {
                     if (this.size > 3) {
                         let farthestTopRight = (topRight - 1) + this.size, farthestBottomLeft = (bottomLeft + 1) - this.size;
                         if (this.isInBounds(farthestTopRight) && this.isInBounds(farthestBottomLeft)) {
                             let farthestTopRightCS = this.findByIndex(farthestTopRight), farthestBottomLeftCS = this.findByIndex(farthestBottomLeft);
                             if (farthestTopRightCS.getOwner() == 0 && farthestBottomLeftCS.getOwner() == 0) {
+                                console.log("boxes " + farthestBottomLeft + " " + bottomLeft + " " + index + " " + topRight + " " + farthestTopRight);
                                 this.setDisplayWhosTurn("WIN 6 size>3");
                                 return true;
                             }
                         }
                     } else {
                         this.setDisplayWhosTurn("WIN 6")
+                        return true;
+                    }
+                }
+            }
+            let topLeft = top - this.size;
+            let bottomRight = bottom + this.size;
+            if (this.isInBounds(topLeft) && this.isInBounds(bottomRight)) {
+                let topLeftCS = this.findByIndex(topLeft), bottomRightCS = this.findByIndex(bottomRight);
+                if (!this.isHittingEdge(bottomRight) && !this.isHittingEdge(topLeft) && !this.isHittingEdge(index) && topLeftCS.getOwner() == 0 && bottomRightCS.getOwner() == 0) {
+                    if (this.size > 3) {
+                        let farthestTopLeft = (topLeft - 1) - this.size, farthestBottomRight = (bottomRight + 1) + this.size;
+                        if (this.isInBounds(farthestTopLeft) && this.isInBounds(farthestBottomRight)) {
+                            let farthestTopLeftCS = this.findByIndex(farthestTopLeft), farthestBottomRightCS = this.findByIndex(farthestBottomRight);
+                            if (farthestTopLeftCS.getOwner() == 0 && farthestBottomRightCS.getOwner() == 0) {
+                                this.setDisplayWhosTurn("WIN 8 size>3");
+                                return true;
+                            }
+                        }
+                    } else {
+                        this.setDisplayWhosTurn("WIN 8")
                         return true;
                     }
                 }
@@ -700,7 +731,7 @@ class Game {
             }
             if (this.isInBounds(left) && this.isInBounds(right)) {
                 let leftCS = this.findByIndex(left), rightCS = this.findByIndex(right);
-                if (leftCS.getOwner() == 1 && rightCS.getOwner() == 1) {
+                if (!this.isHittingEdge(right) && !this.isHittingEdge(left) && !this.isHittingEdge(index) && leftCS.getOwner() == 1 && rightCS.getOwner() == 1) {
                     if (this.size > 3) {
                         let farthestLeft = (left - this.size), farthestRight = (right + this.size);
                         if (this.isInBounds(farthestLeft) && this.isInBounds(farthestRight)) {
@@ -720,7 +751,7 @@ class Game {
             let bottomRight = bottom + this.size;
             if (this.isInBounds(topLeft) && this.isInBounds(bottomRight)) {
                 let topLeftCS = this.findByIndex(topLeft), bottomRightCS = this.findByIndex(bottomRight);
-                if (topLeftCS.getOwner() == 1 && bottomRightCS.getOwner() == 1) {
+                if (!this.isHittingEdge(bottomRight) && !this.isHittingEdge(topLeft) && !this.isHittingEdge(index) && topLeftCS.getOwner() == 1 && bottomRightCS.getOwner() == 1) {
                     if (this.size > 3) {
                         let farthestTopLeft = (topLeft - 1) - this.size, farthestBottomRight = (bottomRight + 1) + this.size;
                         if (this.isInBounds(farthestTopLeft) && this.isInBounds(farthestBottomRight)) {
@@ -740,7 +771,7 @@ class Game {
             let bottomLeft = bottom - this.size;
             if (this.isInBounds(bottomLeft) && this.isInBounds(topRight)) {
                 let topRightCS = this.findByIndex(topRight), bottomLeftCS = this.findByIndex(bottomLeft);
-                if (topRightCS.getOwner() == 1 && bottomLeftCS.getOwner() == 1) {
+                if (!this.isHittingEdge(topRight) && !this.isHittingEdge(bottomLeft) && !this.isHittingEdge(index) && topRightCS.getOwner() == 1 && bottomLeftCS.getOwner() == 1) {
                     if (this.size > 3) {
                         let farthestTopRight = (topRight - 1) + this.size, farthestBottomLeft = (bottomLeft + 1) - this.size;
                         if (this.isInBounds(farthestTopRight) && this.isInBounds(farthestBottomLeft)) {
@@ -767,6 +798,13 @@ class Game {
 
     isOnSameRow(i1, i2) {
         return Math.floor(i1 / this.size) == Math.floor(i2 / this.size);
+    }
+
+    isHittingEdge(i1) {
+        for(let i = 0; i < this.edgeCells.length; i++) {
+            if(i1 == this.edgeCells[i]) return true;
+        }
+        return false;
     }
 
     isOnSameRowHorizontally(i1, i2) {
@@ -798,7 +836,7 @@ class Game {
 
     setDisplayWhosTurn(info) {
         info = "&nbsp;" + info + "&nbsp;";
-        document.getElementById("turn-info").getElementsByTagName("span")[0].innerHTML = info;
+        document.getElementById("turn-info").innerHTML = info + "<span style=\"color:gray\">turn</span>";
     }
 }
 
