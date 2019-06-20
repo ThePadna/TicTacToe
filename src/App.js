@@ -9,6 +9,7 @@ class App extends Component {
     this.gameInstance = null;
     this.state = { inProgress: false }
     this.hideToggle = this.hideToggle.bind(this);
+    this.backToMenu = this.backToMenu.bind(this);
     this.difficulty = "Medium";
     this.gridSize = 3;
   }
@@ -20,11 +21,15 @@ class App extends Component {
       this.difficulty = selectBoxDifficulty.options[selectBoxDifficulty.selectedIndex].value;
       let size = selectBoxGrid.options[selectBoxGrid.selectedIndex].value;
       this.gridSize = parseInt(size.substr(0, 1));
+
       return (
         <div id="wrapper">
         <div id="game-wrapper">
           <div id="header">
             <p>TicTacToe</p>
+          </div>
+          <div id="menubtnwrapper">
+          <button id="menubtn" onClick={this.backToMenu}>Back to Menu</button>
           </div>
           <div id="canvas-wrapper">
             <canvas id="gamecanvas" height="500px" width="500px"></canvas>
@@ -91,6 +96,11 @@ class App extends Component {
 
   hideToggle() {
     this.setState({ inProgress: true });
+  }
+
+  backToMenu() {
+    this.gameInstance = null;
+    this.setState({ inProgress: false });
   }
 
   getGameInstance() {

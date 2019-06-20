@@ -26,6 +26,19 @@ body {
   height: 30px;
 }
 
+#menubtn {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  width: 100px;
+  height: 30px;
+}
+
+#menubtnwrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 #canvas-wrapper {
   border: 0;
   margin: 0;
