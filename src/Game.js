@@ -624,7 +624,7 @@ class Game {
             }
         }
         if (!emptyCell) {
-            this.setDisplayWhosTurn("TIE");
+            this.setDisplayWhosWon("TIE");
             return true;
         }
         for (let i = 0; i < playerClaims.length; i++) {
@@ -638,12 +638,14 @@ class Game {
                         if (this.isInBounds(farthestBottom) && this.isInBounds(farthestTop) && this.isOnSameRow(index, farthestTop) && this.isOnSameRow(index, farthestBottom)) {
                             let farthestBottomCS = this.findByIndex(farthestBottom), farthestTopCS = this.findByIndex(farthestTop);
                             if (farthestBottomCS.getOwner() == 0 && farthestTopCS.getOwner() == 0) {
-                                this.setDisplayWhosTurn("WIN 1 size>3");
+                                this.setDisplayWhosWon("you")
+                                console.log("WIN 1 size>3")
                                 return true;
                             }
                         }
                     } else {
-                        this.setDisplayWhosTurn("WIN 1");
+                        this.setDisplayWhosWon("you")
+                        console.log("WIN 1")
                         return true;
                     }
                 }
@@ -656,12 +658,14 @@ class Game {
                         if (this.isInBounds(farthestLeft) && this.isInBounds(farthestRight)) {
                             let farthestLeftCS = this.findByIndex(farthestLeft), farthestRightCS = this.findByIndex(farthestRight);
                             if (farthestLeftCS.getOwner() == 0 && farthestRightCS.getOwner() == 0) {
-                                this.setDisplayWhosTurn("WIN 2 size>3");
+                                this.setDisplayWhosWon("you")
+                                console.log("WIN 2 size>3")
                                 return true;
                             }
                         }
                     } else {
-                        this.setDisplayWhosTurn("WIN 2");
+                        this.setDisplayWhosWon("you")
+                        console.log("WIN 2")
                         return true;
                     }
                 }
@@ -677,12 +681,14 @@ class Game {
                             let farthestTopRightCS = this.findByIndex(farthestTopRight), farthestBottomLeftCS = this.findByIndex(farthestBottomLeft);
                             if (farthestTopRightCS.getOwner() == 0 && farthestBottomLeftCS.getOwner() == 0) {
                                 console.log("boxes " + farthestBottomLeft + " " + bottomLeft + " " + index + " " + topRight + " " + farthestTopRight);
-                                this.setDisplayWhosTurn("WIN 6 size>3");
+                                this.setDisplayWhosWon("you")
+                                console.log("WIN 6 size>3")
                                 return true;
                             }
                         }
                     } else {
-                        this.setDisplayWhosTurn("WIN 6")
+                        this.setDisplayWhosWon("you")
+                        console.log("WIN 6")
                         return true;
                     }
                 }
@@ -697,12 +703,14 @@ class Game {
                         if (this.isInBounds(farthestTopLeft) && this.isInBounds(farthestBottomRight)) {
                             let farthestTopLeftCS = this.findByIndex(farthestTopLeft), farthestBottomRightCS = this.findByIndex(farthestBottomRight);
                             if (farthestTopLeftCS.getOwner() == 0 && farthestBottomRightCS.getOwner() == 0) {
-                                this.setDisplayWhosTurn("WIN 8 size>3");
+                                this.setDisplayWhosWon("you")
+                                console.log("WIN 8 size>3")
                                 return true;
                             }
                         }
                     } else {
-                        this.setDisplayWhosTurn("WIN 8")
+                        this.setDisplayWhosWon("you")
+                        console.log("WIN 8")
                         return true;
                     }
                 }
@@ -719,30 +727,38 @@ class Game {
                         if (this.isInBounds(farthestBottom) && this.isInBounds(farthestTop)) {
                             let farthestBottomCS = this.findByIndex(farthestBottom), farthestTopCS = this.findByIndex(farthestTop);
                             if (farthestBottomCS.getOwner() == 1 && farthestTopCS.getOwner() == 1) {
-                                this.setDisplayWhosTurn("WIN 3 size>3");
+                                let csList = [topCS, bottomCS, farthestBottomCS, farthestTopCS, aiClaims[i]];
+                                this.setDisplayWhosWon("AI", csList);
+                                console.log("WIN 3 SIZE>3")
                                 return true;
                             }
                         }
                     } else {
-                        this.setDisplayWhosTurn("WIN 3");
+                        let csList = [topCS, bottomCS, aiClaims[i]];
+                        this.setDisplayWhosWon("AI", csList);
+                        console.log("WIN 3")
                         return true;
                     }
                 }
             }
             if (this.isInBounds(left) && this.isInBounds(right)) {
                 let leftCS = this.findByIndex(left), rightCS = this.findByIndex(right);
-                if (!this.isHittingEdge(right) && !this.isHittingEdge(left) && !this.isHittingEdge(index) && leftCS.getOwner() == 1 && rightCS.getOwner() == 1) {
-                    if (this.size > 3) {
+                if (leftCS.getOwner() == 1 && rightCS.getOwner() == 1) {
+                    if (this.size > 3 && !this.isHittingEdge(right) && !this.isHittingEdge(left) && !this.isHittingEdge(index)) {
                         let farthestLeft = (left - this.size), farthestRight = (right + this.size);
                         if (this.isInBounds(farthestLeft) && this.isInBounds(farthestRight)) {
                             let farthestLeftCS = this.findByIndex(farthestLeft), farthestRightCS = this.findByIndex(farthestRight);
                             if (farthestLeftCS.getOwner() == 1 && farthestRightCS.getOwner() == 1) {
-                                this.setDisplayWhosTurn("WIN 4 size>3");
+                                let csList = [leftCS, rightCS, farthestLeftCS, farthestRightCS, aiClaims[i]];
+                                this.setDisplayWhosWon("AI", csList);
+                                console.log("WIN 4 SIZE>3")
                                 return true;
                             }
                         }
                     } else {
-                        this.setDisplayWhosTurn("WIN 4");
+                        let csList = [leftCS, rightCS, aiClaims[i]];
+                        this.setDisplayWhosWon("AI", csList);
+                        console.log("WIN 4")
                         return true;
                     }
                 }
@@ -751,18 +767,22 @@ class Game {
             let bottomRight = bottom + this.size;
             if (this.isInBounds(topLeft) && this.isInBounds(bottomRight)) {
                 let topLeftCS = this.findByIndex(topLeft), bottomRightCS = this.findByIndex(bottomRight);
-                if (!this.isHittingEdge(bottomRight) && !this.isHittingEdge(topLeft) && !this.isHittingEdge(index) && topLeftCS.getOwner() == 1 && bottomRightCS.getOwner() == 1) {
-                    if (this.size > 3) {
+                if (topLeftCS.getOwner() == 1 && bottomRightCS.getOwner() == 1) {
+                    if (this.size > 3 && !this.isHittingEdge(bottomRight) && !this.isHittingEdge(topLeft) && !this.isHittingEdge(index)) {
                         let farthestTopLeft = (topLeft - 1) - this.size, farthestBottomRight = (bottomRight + 1) + this.size;
                         if (this.isInBounds(farthestTopLeft) && this.isInBounds(farthestBottomRight)) {
                             let farthestTopLeftCS = this.findByIndex(farthestTopLeft), farthestBottomRightCS = this.findByIndex(farthestBottomRight);
                             if (farthestTopLeftCS.getOwner() == 1 && farthestBottomRightCS.getOwner() == 1) {
-                                this.setDisplayWhosTurn("WIN 5 size>3");
+                                let csList = [topLeftCS, bottomRightCS, farthestBottomRightCS, farthestTopLeftCS, aiClaims[i]];
+                                this.setDisplayWhosWon("AI", csList);
+                                console.log("WIN 5 SIZE>3")
                                 return true;
                             }
                         }
                     } else {
-                        this.setDisplayWhosTurn("WIN 5")
+                        let csList = [topLeftCS, bottomRightCS, aiClaims[i]];
+                        this.setDisplayWhosWon("AI", csList)
+                        console.log("WIN 5")
                         return true;
                     }
                 }
@@ -771,19 +791,22 @@ class Game {
             let bottomLeft = bottom - this.size;
             if (this.isInBounds(bottomLeft) && this.isInBounds(topRight)) {
                 let topRightCS = this.findByIndex(topRight), bottomLeftCS = this.findByIndex(bottomLeft);
-                if (!this.isHittingEdge(topRight) && !this.isHittingEdge(bottomLeft) && !this.isHittingEdge(index) && topRightCS.getOwner() == 1 && bottomLeftCS.getOwner() == 1) {
-                    if (this.size > 3) {
+                if (topRightCS.getOwner() == 1 && bottomLeftCS.getOwner() == 1) {
+                    if (this.size > 3 && !this.isHittingEdge(topRight) && !this.isHittingEdge(bottomLeft) && !this.isHittingEdge(index)) {
                         let farthestTopRight = (topRight - 1) + this.size, farthestBottomLeft = (bottomLeft + 1) - this.size;
                         if (this.isInBounds(farthestTopRight) && this.isInBounds(farthestBottomLeft)) {
                             let farthestTopRightCS = this.findByIndex(farthestTopRight), farthestBottomLeftCS = this.findByIndex(farthestBottomLeft);
-                            console.log("coords: " + farthestTopRight + " " + topRight + " " + index + " " + bottomLeft + " " + farthestBottomLeft);
                             if (farthestTopRightCS.getOwner() == 1 && farthestBottomLeftCS.getOwner() == 1) {
-                                this.setDisplayWhosTurn("WIN 7 size>3");
+                                let csList = [topRightCS, bottomLeftCS, farthestBottomLeftCS, farthestTopRightCS, aiClaims[i]];
+                                this.setDisplayWhosWon("AI", csList);
+                                console.log("WIN 7 SIZE>3")
                                 return true;
                             }
                         }
                     } else {
-                        this.setDisplayWhosTurn("WIN 7")
+                        let csList = [topRightCS, bottomLeftCS, aiClaims[i]];
+                        this.setDisplayWhosWon("AI", csList)
+                        console.log("WIN 7")
                         return true;
                     }
                 }
@@ -837,6 +860,29 @@ class Game {
     setDisplayWhosTurn(info) {
         info = "&nbsp;" + info + "&nbsp;";
         document.getElementById("turn-info").innerHTML = "<span>" + info + "</span>turn";
+    }
+
+    setDisplayWhosWon(winner, csList) {
+        winner = "&nbsp;" + winner + "&nbsp;";
+        let statement = "<span>" + winner + "</span>Wins!";
+        if(winner.indexOf("TIE") != -1) statement = statement.substr(0, statement.length-5);
+        document.getElementById("turn-info").innerHTML = statement;
+        let ctx = document.querySelector("#gamecanvas").getContext("2d");
+        ctx.lineWidth = (15 / this.size);
+        ctx.strokeStyle = 'red';
+        for(let i = 0; i < csList.length; i++) {
+            let ccs = csList[i].getSelection();
+            let coord1 = ccs.getCoord1(), coord2 = ccs.getCoord2();
+            ctx.beginPath();
+            ctx.moveTo(coord1.getX(), coord1.getY());
+            ctx.lineTo(coord2.getX(), coord1.getY());
+            ctx.lineTo(coord2.getX(), coord2.getY());
+            ctx.lineTo(coord1.getX(), coord2.getY());
+            ctx.lineTo(coord1.getX(), coord1.getY());
+            ctx.stroke();
+        }
+        ctx.lineWidth = (40 / this.size);
+        ctx.strokeStyle = 'black';
     }
 }
 
