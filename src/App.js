@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
 import Game from './Game';
-import { throws } from 'assert';
 
 class App extends Component {
 

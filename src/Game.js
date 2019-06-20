@@ -836,7 +836,7 @@ class Game {
 
     setDisplayWhosTurn(info) {
         info = "&nbsp;" + info + "&nbsp;";
-        document.getElementById("turn-info").innerHTML = info + "<span style=\"color:gray\">turn</span>";
+        document.getElementById("turn-info").innerHTML = "<span>" + info + "</span>turn";
     }
 }
 

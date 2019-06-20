@@ -8,7 +8,7 @@ body {
 
 #header {
   color: white;
-  font-family: 'Dokdo', cursive;
+  font-family: 'Faster One', cursive;
   font-size: 200px;
   text-align: center;
   text-shadow: 4px 4px gray;
@@ -44,21 +44,25 @@ body {
 }
 
 #turn-info {
-  margin-top: 35px;
+  margin-top: 25px;
   color: white;
   text-align: center;
-  font-size: 75px;
-  font-family: 'Dokdo', cursive;
+  font-size: 45px;
+  font-family: 'Audiowide', cursive;
 }
 
 #difficulty-info {
   margin-top: 20px;
   text-align: center;
-  font-size: 50px;
-  font-family: 'Dokdo', cursive;
+  font-size: 30px;
+  font-family: 'Notable', sans-serif;
 }
 
 #turn-info span {
   color: gray;
-  font-family: 'Dokdo', cursive;
+  font-family: 'Audiowide', cursive;
+}
+
+#gridsize,#aidifficulty {
+  margin-bottom: 5px;
 }
