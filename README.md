@@ -1,6 +1,6 @@
 ## Can I test this out anywhere?
 
-Yes, there is a live version at https://github.com/thepadna/tictactoe
+Yes, there is a live version at https://thepadna.github.io/TicTacToe/
 
 ## Can I fork this and modify it to my own liking?
 
