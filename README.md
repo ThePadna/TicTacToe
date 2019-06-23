@@ -1,11 +1,11 @@
-## How to run
+## Can I test this out anywhere?
 
-In the project directory, you can run:
+Yes, there is a live version at https://github.com/thepadna/tictactoe
 
-### `npm start`
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Can I fork this and modify it to my own liking?
 
-### `npm run build`
+Feel free.
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## How to run this on my own machine?
+
+Download the zip from github and use 'node start' in the root directory.
