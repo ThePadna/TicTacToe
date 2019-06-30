@@ -581,60 +581,60 @@ class Game {
                     this.claimEndAITurn(currentHighest[1], symbol, playerClaims, aiClaims);
                     return;
                 }
-                for (let i = 0; i < aiClaims.length; i++) {
-                    let index = aiClaims[i].getIndex();
-                    let top = (index - 1), bottom = (index + 1), right = (index + this.size), left = (index - this.size), topLeft = (top - this.size), topRight = (top + this.size), bottomLeft = (bottom - this.size), bottomRight = (bottom + this.size);
-                    if (this.isInBounds(top) && this.isInBounds(bottom) && this.isOnSameRow(index, top) && this.isOnSameRow(index, bottom)) {
-                        let topCS = this.findByIndex(top), bottomCS = this.findByIndex(bottom);
-                        if (topCS.getOwner() == 1 && bottomCS.getOwner() == null) {
-                            this.claimEndAITurn(bottomCS, symbol, playerClaims, aiClaims);
-                            console.log("okTEST4");
-                            return;
-                        }
-                        if (bottomCS.getOwner() == 1 && topCS.getOwner() == null) {
-                            this.claimEndAITurn(topCS, symbol, playerClaims, aiClaims);
-                            console.log("okTEST3");
-                            return;
-                        }
+            }
+            for (let i = 0; i < aiClaims.length; i++) {
+                let index = aiClaims[i].getIndex();
+                let top = (index - 1), bottom = (index + 1), right = (index + this.size), left = (index - this.size), topLeft = (top - this.size), topRight = (top + this.size), bottomLeft = (bottom - this.size), bottomRight = (bottom + this.size);
+                if (this.isInBounds(top) && this.isInBounds(bottom) && this.isOnSameRow(index, top) && this.isOnSameRow(index, bottom)) {
+                    let topCS = this.findByIndex(top), bottomCS = this.findByIndex(bottom);
+                    if (topCS.getOwner() == 1 && bottomCS.getOwner() == null) {
+                        this.claimEndAITurn(bottomCS, symbol, playerClaims, aiClaims);
+                        console.log("okTEST4");
+                        return;
                     }
-                    if (this.isInBounds(right) && this.isInBounds(left)) {
-                        let leftCS = this.findByIndex(left), rightCS = this.findByIndex(right);
-                        if (leftCS.getOwner() == 1 && rightCS.getOwner() == null) {
-                            console.log("okTEST1");
-                            this.claimEndAITurn(rightCS, symbol, playerClaims, aiClaims);
-                            return;
-                        }
-                        if (rightCS.getOwner() == 1 && leftCS.getOwner() == null) {
-                            console.log("okTEST2");
-                            this.claimEndAITurn(leftCS, symbol, playerClaims, aiClaims);
-                            return;
-                        }
+                    if (bottomCS.getOwner() == 1 && topCS.getOwner() == null) {
+                        this.claimEndAITurn(topCS, symbol, playerClaims, aiClaims);
+                        console.log("okTEST3");
+                        return;
                     }
-                    if (this.isInBounds(topLeft) && this.isInBounds(bottomRight) && !this.isHittingEdge(index)) {
-                        let topLeftCS = this.findByIndex(topLeft), bottomRightCS = this.findByIndex(bottomRight);
-                        if (topLeftCS.getOwner() == 1 && bottomRightCS.getOwner() == null) {
-                            this.claimEndAITurn(bottomRightCS, symbol, playerClaims, aiClaims);
-                            console.log("okTEST5");
-                            return;
-                        }
-                        if (bottomRightCS.getOwner() == 1 && topLeftCS.getOwner() == null) {
-                            this.claimEndAITurn(topLeftCS, symbol, playerClaims, aiClaims);
-                            console.log("okTEST6");
-                            return;
-                        }
+                }
+                if (this.isInBounds(right) && this.isInBounds(left)) {
+                    let leftCS = this.findByIndex(left), rightCS = this.findByIndex(right);
+                    if (leftCS.getOwner() == 1 && rightCS.getOwner() == null) {
+                        console.log("okTEST1");
+                        this.claimEndAITurn(rightCS, symbol, playerClaims, aiClaims);
+                        return;
                     }
-                    if (this.isInBounds(topRight) && this.isInBounds(bottomLeft) && !this.isHittingEdge(index)) {
-                        let topRightCS = this.findByIndex(topRight), bottomLeftCS = this.findByIndex(bottomLeft);
-                        if (topRightCS.getOwner() == 1 && bottomLeftCS.getOwner() == null) {
-                            this.claimEndAITurn(bottomLeftCS, symbol, playerClaims, aiClaims);
-                            console.log("okTEST7");
-                            return;
-                        }
-                        if (bottomLeftCS.getOwner() == 1 && topRightCS.getOwner() == null) {
-                            this.claimEndAITurn(topRightCS, symbol, playerClaims, aiClaims);
-                            console.log("okTEST8");
-                            return;
-                        }
+                    if (rightCS.getOwner() == 1 && leftCS.getOwner() == null) {
+                        console.log("okTEST2");
+                        this.claimEndAITurn(leftCS, symbol, playerClaims, aiClaims);
+                        return;
+                    }
+                }
+                if (this.isInBounds(topLeft) && this.isInBounds(bottomRight) && !this.isHittingEdge(index)) {
+                    let topLeftCS = this.findByIndex(topLeft), bottomRightCS = this.findByIndex(bottomRight);
+                    if (topLeftCS.getOwner() == 1 && bottomRightCS.getOwner() == null) {
+                        this.claimEndAITurn(bottomRightCS, symbol, playerClaims, aiClaims);
+                        console.log("okTEST5");
+                        return;
+                    }
+                    if (bottomRightCS.getOwner() == 1 && topLeftCS.getOwner() == null) {
+                        this.claimEndAITurn(topLeftCS, symbol, playerClaims, aiClaims);
+                        console.log("okTEST6");
+                        return;
+                    }
+                }
+                if (this.isInBounds(topRight) && this.isInBounds(bottomLeft) && !this.isHittingEdge(index)) {
+                    let topRightCS = this.findByIndex(topRight), bottomLeftCS = this.findByIndex(bottomLeft);
+                    if (topRightCS.getOwner() == 1 && bottomLeftCS.getOwner() == null) {
+                        this.claimEndAITurn(bottomLeftCS, symbol, playerClaims, aiClaims);
+                        console.log("okTEST7");
+                        return;
+                    }
+                    if (bottomLeftCS.getOwner() == 1 && topRightCS.getOwner() == null) {
+                        this.claimEndAITurn(topRightCS, symbol, playerClaims, aiClaims);
+                        console.log("okTEST8");
+                        return;
                     }
                 }
             }
@@ -779,37 +779,37 @@ class Game {
                     }
                 }
             }
-        }
-        for (let i = 0; i < playerClaims.length; i++) {
-            let index = playerClaims[i].getIndex();
-            let top = (index - 1), bottom = (index + 1), right = (index + this.size), left = (index - this.size);
-            if (this.isInBounds(top)) {
-                let topCS = this.findByIndex(top);
-                if (topCS.getOwner() == null) {
-                    console.log("okTES1T");
-                    this.claimEndAITurn(topCS, symbol, playerClaims, aiClaims);
-                    return;
+            for (let i = 0; i < playerClaims.length; i++) {
+                let index = playerClaims[i].getIndex();
+                let top = (index - 1), bottom = (index + 1), right = (index + this.size), left = (index - this.size);
+                if (this.isInBounds(top)) {
+                    let topCS = this.findByIndex(top);
+                    if (topCS.getOwner() == null) {
+                        console.log("okTES1T");
+                        this.claimEndAITurn(topCS, symbol, playerClaims, aiClaims);
+                        return;
+                    }
                 }
-            }
-            if (this.isInBounds(bottom)) {
-                let bottomCS = this.findByIndex(bottom);
-                if (bottomCS.getOwner() == null) {
-                    this.claimEndAITurn(bottomCS, symbol, playerClaims, aiClaims);
-                    return;
+                if (this.isInBounds(bottom)) {
+                    let bottomCS = this.findByIndex(bottom);
+                    if (bottomCS.getOwner() == null) {
+                        this.claimEndAITurn(bottomCS, symbol, playerClaims, aiClaims);
+                        return;
+                    }
                 }
-            }
-            if (this.isInBounds(right)) {
-                let rightCS = this.findByIndex(right);
-                if (rightCS.getOwner() == null) {
-                    this.claimEndAITurn(rightCS, symbol, playerClaims, aiClaims);
-                    return;
+                if (this.isInBounds(right)) {
+                    let rightCS = this.findByIndex(right);
+                    if (rightCS.getOwner() == null) {
+                        this.claimEndAITurn(rightCS, symbol, playerClaims, aiClaims);
+                        return;
+                    }
                 }
-            }
-            if (this.isInBounds(left)) {
-                let leftCS = this.findByIndex(left);
-                if (leftCS.getOwner() == null) {
-                    this.claimEndAITurn(leftCS, symbol, playerClaims, aiClaims);
-                    return;
+                if (this.isInBounds(left)) {
+                    let leftCS = this.findByIndex(left);
+                    if (leftCS.getOwner() == null) {
+                        this.claimEndAITurn(leftCS, symbol, playerClaims, aiClaims);
+                        return;
+                    }
                 }
             }
         }
