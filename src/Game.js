@@ -3,8 +3,6 @@ import CanvasCoordinates from './wrappers/CanvasCoordinates'
 import CanvasCoordinatesSelection from './wrappers/CanvasCoordinatesSelection'
 import DrawCircleAnim from './tasks/DrawCircleAnim'
 import DrawCrossAnim from './tasks/DrawCrossAnim'
-import { read } from 'fs';
-import { throws } from 'assert';
 
 class Game {
 
@@ -29,23 +27,31 @@ class Game {
         this.edgeCells = [];
         let num = 0;
         for (let i = 0; i < this.size; i++) {
+            console.log("loop #1 pushing " + num);
             this.edgeCells.push(num);
             num++;
         }
         num = this.size - 1;
         for (let i = 0; i < this.size; i++) {
+            console.log("loop #2 pushing " + num);
             this.edgeCells.push(num);
             num += this.size;
         }
         num = 0;
         for (let i = 0; i < this.size; i++) {
+            console.log("loop #3 pushing " + num);
             this.edgeCells.push(num);
-            num++;
+            num += this.size;
         }
         num = (this.size * this.size) - this.size;
         for (let i = 0; i < this.size; i++) {
+            console.log("loop #4 pushing " + num);
             this.edgeCells.push(num);
             num++;
+        }
+        console.log("edge cells");
+        for(let i = 0; i < this.edgeCells.length; i++) {
+            console.log(i);
         }
     }
 
