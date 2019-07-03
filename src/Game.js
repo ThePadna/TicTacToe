@@ -797,27 +797,75 @@ class Game {
                 if (this.isInBounds(topLeft) && this.isInBounds(bottomRight) && !this.isHittingEdge(index)) {
                     let topLeftCS = this.findByIndex(topLeft), bottomRightCS = this.findByIndex(bottomRight);
                     if (topLeftCS.getOwner() == 1 && bottomRightCS.getOwner() == null) {
-                        this.claimEndAITurn(bottomRightCS, symbol, playerClaims, aiClaims);
-                        console.log("okTEST5");
-                        return;
+                        if (this.size > 3) {
+                            let topRightFarthest = (topRight - 1) + this.index, bottomLeftFarthest = (bottomLeft + 1) - this.index;
+                            if (this.isInBounds(topRightFarthest) && this.isInBounds(bottomLeftFarthest)) {
+                                let topRightFarthestCS = this.findByIndex(topRightFarthest), bottomLeftFarthestCS = this.findByIndex(bottomLeftFarthest);
+                                if ((topRightFarthestCS.getOwner() == null || topRightFarthestCS.getOwner() == 1) && (bottomLeftFarthestCS.getOwner() == null || bottomLeftFarthestCS.getOwner() == 1)) {
+                                    this.claimEndAITurn(bottomRightCS, symbol, playerClaims, aiClaims);
+                                    console.log("okTEST5 size>3");
+                                    return;
+                                }
+                            }
+                        } else {
+                            this.claimEndAITurn(bottomRightCS, symbol, playerClaims, aiClaims);
+                            console.log("okTEST5");
+                            return;
+                        }
                     }
                     if (bottomRightCS.getOwner() == 1 && topLeftCS.getOwner() == null) {
-                        this.claimEndAITurn(topLeftCS, symbol, playerClaims, aiClaims);
-                        console.log("okTEST6");
-                        return;
+                        if (this.size > 3) {
+                            let topRightFarthest = (topRight - 1) + this.index, bottomLeftFarthest = (bottomLeft + 1) - this.index;
+                            if (this.isInBounds(topRightFarthest) && this.isInBounds(bottomLeftFarthest)) {
+                                let topRightFarthestCS = this.findByIndex(topRightFarthest), bottomLeftFarthestCS = this.findByIndex(bottomLeftFarthest);
+                                if ((topRightFarthestCS.getOwner() == null || topRightFarthestCS.getOwner() == 1) && (bottomLeftFarthestCS.getOwner() == null || bottomLeftFarthestCS.getOwner() == 1)) {
+                                    this.claimEndAITurn(topLeftCS, symbol, playerClaims, aiClaims);
+                                    console.log("okTEST6 size>3");
+                                    return;
+                                }
+                            }
+                        } else {
+                            this.claimEndAITurn(topLeftCS, symbol, playerClaims, aiClaims);
+                            console.log("okTEST6");
+                            return;
+                        }
                     }
                 }
                 if (this.isInBounds(topRight) && this.isInBounds(bottomLeft) && !this.isHittingEdge(index)) {
                     let topRightCS = this.findByIndex(topRight), bottomLeftCS = this.findByIndex(bottomLeft);
                     if (topRightCS.getOwner() == 1 && bottomLeftCS.getOwner() == null) {
-                        this.claimEndAITurn(bottomLeftCS, symbol, playerClaims, aiClaims);
-                        console.log("okTEST7");
-                        return;
+                        if (this.size > 3) {
+                            let topRightFarthest = (topRight - 1) + this.index, bottomLeftFarthest = (bottomLeft + 1) - this.index;
+                            if (this.isInBounds(topRightFarthest) && this.isInBounds(bottomLeftFarthest)) {
+                                let topRightFarthestCS = this.findByIndex(topRightFarthest), bottomLeftFarthestCS = this.findByIndex(bottomLeftFarthest);
+                                if ((topRightFarthestCS.getOwner() == null || topRightFarthestCS.getOwner() == 1) && (bottomLeftFarthestCS.getOwner() == null || bottomLeftFarthestCS.getOwner() == 1)) {
+                                    this.claimEndAITurn(bottomLeftCS, symbol, playerClaims, aiClaims);
+                                    console.log("okTEST7 size>3");
+                                    return;
+                                }
+                            }
+                        } else {
+                            this.claimEndAITurn(bottomLeftCS, symbol, playerClaims, aiClaims);
+                            console.log("okTEST7");
+                            return;
+                        }
                     }
                     if (bottomLeftCS.getOwner() == 1 && topRightCS.getOwner() == null) {
-                        this.claimEndAITurn(topRightCS, symbol, playerClaims, aiClaims);
-                        console.log("okTEST8");
-                        return;
+                        if (this.size > 3) {
+                            let topRightFarthest = (topRight - 1) + this.index, bottomLeftFarthest = (bottomLeft + 1) - this.index;
+                            if (this.isInBounds(topRightFarthest) && this.isInBounds(bottomLeftFarthest)) {
+                                let topRightFarthestCS = this.findByIndex(topRightFarthest), bottomLeftFarthestCS = this.findByIndex(bottomLeftFarthest);
+                                if ((topRightFarthestCS.getOwner() == null || topRightFarthestCS.getOwner() == 1) && (bottomLeftFarthestCS.getOwner() == null || bottomLeftFarthestCS.getOwner() == 1)) {
+                                    this.claimEndAITurn(topRightCS, symbol, playerClaims, aiClaims);
+                                    console.log("okTEST8 size>3");
+                                    return;
+                                }
+                            }
+                        } else {
+                            this.claimEndAITurn(topRightCS, symbol, playerClaims, aiClaims);
+                            console.log("okTEST8");
+                            return;
+                        }
                     }
                 }
             }
