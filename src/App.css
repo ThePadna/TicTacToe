@@ -3,6 +3,7 @@
   margin: 0;
 }
 body {
+  overflow: hidden;
   background-color: black;
 }
 
@@ -78,4 +79,20 @@ body {
 
 #gridsize,#aidifficulty {
   margin-bottom: 5px;
+}
+
+#ghwrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 100px;
+}
+
+#github {
+  color: white;
+}
+
+#github img:hover {
+  transition: transform .2s;
+  transform: scale(1.5);
 }

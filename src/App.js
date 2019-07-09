@@ -65,6 +65,11 @@ class App extends Component {
             </div>
             <button id="startbtn" onClick={this.hideToggle}>Start</button>
           </div>
+          <div id="ghwrapper">
+          <div id="github">
+            <a href="https://github.com/ThePadna/TicTacToe/"><img width="200px;" height="200px;" src={require('./octocat.png')}></img> </a>
+          </div>
+          </div>
         </div>
       );
     }
